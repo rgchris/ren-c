@@ -47,14 +47,12 @@
 #include <string.h>
 #include <unistd.h>
 
-// Does not include host-lib for some reason, and redefines a lot of
-// basics.  Going with that for this file, for now...
+// !!! Does not include host-lib for some reason, and redefines a lot of
+// basics.  But it seemed to be intentional?  Review why.
 
-#if why_no_host_lib
-	#include "reb-host.h"
-	#include "host-lib.h"
-	#include "rebol-lib.h"
-#endif
+// #include "reb-host.h"
+// #include "host-lib.h"
+// #include "rebol-lib.h"
 
 #ifdef __cplusplus
 	#define sCAST(t, v) static_cast<t>(v)
