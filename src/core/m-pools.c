@@ -200,11 +200,12 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 }
 
 
+#ifdef not_used
 /***********************************************************************
 **
-**	void Check_Pool_Map(void)
+*/	void Check_Pool_Map(void)
 /*
-************************************************************************
+***********************************************************************/
 {
 	int n;
 
@@ -212,7 +213,8 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 		if (FIND_POOL(n) != Find_Pool(n))
 			Debug_Fmt("%d: %d %d", n, FIND_POOL(n), Find_Pool(n));
 }
-*/
+#endif 
+
 #endif
 
 

@@ -994,7 +994,7 @@
         return -TOKEN_WORD;
     }
 
-#if ndef	// unreachable code
+#ifdef not_used	// unreachable code
     /* avoid '123 :123 from scanning as a word.... */
     if (IS_LEX_WORD(cp[1]) && !HAS_LEX_FLAGS(flags, LEX_WORD_FLAGS))
         return TOKEN_LIT;
@@ -1116,10 +1116,9 @@ scanword:
 }
 
 #ifdef not_used
-//!!!
 /***********************************************************************
 **
-	REBOOL Construct_Simple(REBVAL *value, REBSER *spec)
+*/	REBOOL Construct_Simple(REBVAL *value, REBSER *spec)
 /*
 **		Handle special #[type] constructs. These are used to
 **		boot REBOL, so must not require binding.

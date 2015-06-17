@@ -573,10 +573,10 @@ typedef unsigned char REBYTE;
 **
 ***********************************************************************/
 
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 	// C99 or later
 	#define FINITE isfinite
-#elif __cplusplus && __cplusplus >= 199711L
+#elif defined(__cplusplus) && __cplusplus >= 199711L
 	// C++11 or later
 	#define FINITE isfinite
 #else
