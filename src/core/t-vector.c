@@ -178,7 +178,7 @@ void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 				f = VAL_DECIMAL(val);
 				if (bits <= VTUI64) i = (REBINT)(f);
 			}
-			else Trap_Arg(val);
+			else vTrap_Arg(val);
 			//if (n >= ser->tail) Expand_Vector(ser);
 			set_vect(bits, ser->data, n++, i, f);
 		}
@@ -205,10 +205,9 @@ void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 	REBCNT type = VECT_TYPE(VAL_SERIES(vect));
 	REBSER *ser = Make_Block(len);
 	REBCNT n;
-	REBVAL *val;
+	REBVAL *val = BLK_HEAD(ser);
 
 	if (len > 0) {
-		val = BLK_HEAD(ser);
 		for (n = VAL_INDEX(vect); n < VAL_TAIL(vect); n++, val++) {
 			VAL_SET(val, (type >= VTSF08) ? REB_DECIMAL : REB_INTEGER);
 			VAL_INT64(val) = get_vect(type, data, n); // can be int or decimal
@@ -515,7 +514,15 @@ void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 	}
 	else if (IS_DECIMAL(pvs->setval)) {
 		f = VAL_DECIMAL(pvs->setval);
-		if (bits <= VTUI64) i = (REBINT)(f);
+		if (bits <= VTUI64) i = sCAST(REBINT, f);
+		else {
+			// !!! REVIEW: i was not set in this case; compiler caught the
+			// unused parameter.  So fill with distinctive garbage to make it
+			// easier to search for if it ever is.
+			i = -646699; 
+
+			return PE_BAD_SET;
+		}
 	}
 	else return PE_BAD_SET;
 

@@ -289,7 +289,7 @@
 **
 ***********************************************************************/
 {
-	if (index >= SERIES_TAIL(Lib_Context)) CRASH(RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(Lib_Context)) Crash(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(Lib_Context) + index + 1;
 }
 
@@ -339,7 +339,7 @@
 **
 ***********************************************************************/
 {
-	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(obj)) Crash(RP_BAD_OBJ_INDEX);
 	return Get_Sym_Name(FRM_WORD_SYM(obj, index));
 }
 
@@ -352,7 +352,7 @@
 **
 ***********************************************************************/
 {
-	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(obj)) Crash(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(obj) + index;
 }
 
@@ -367,7 +367,7 @@
 {
 	REBSER *obj = VAL_OBJ_FRAME(objval);
 	assert(IS_FRAME(BLK_HEAD(obj)));
-	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(obj)) Crash(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(obj) + index;
 }
 
@@ -410,7 +410,7 @@
 
 	obj = VAL_OBJ_VALUES(ROOT_SYSTEM) + i1;
 	if (!i2) return obj;
-	if (!IS_OBJECT(obj)) CRASH(RP_BAD_OBJ_INDEX);
+	if (!IS_OBJECT(obj)) Crash(RP_BAD_OBJ_INDEX);
 	return Get_Field(VAL_OBJ_FRAME(obj), i2);
 }
 

@@ -395,7 +395,7 @@ xx*/	REBINT Wait_Device(REBREQ *req, REBCNT timeout)
 	REBVAL *actor;
 	REBCNT n = 0;
 
-	if (action >= A_MAX_ACTION) CRASH(RP_BAD_PORT_ACTION);
+	if (action >= A_MAX_ACTION) Crash(RP_BAD_PORT_ACTION);
 
 	// Verify valid port (all of these must be false):
 	if (
@@ -484,7 +484,7 @@ xx*/	REBINT Wait_Device(REBREQ *req, REBCNT timeout)
 		|| !IS_FRAME(BLK_HEAD(port))
 		|| !IS_OBJECT(BLK_SKIP(port, STD_PORT_SPEC))
 	)
-		Trap0(RE_INVALID_PORT);
+		vTrap0(RE_INVALID_PORT);
 }
 
 /***********************************************************************
@@ -534,7 +534,7 @@ SCHEME_ACTIONS *Scheme_Actions;	// Initial Global (not threaded)
 	REBINT n;
 
 	for (n = 0; n < MAX_SCHEMES && Scheme_Actions[n].sym; n++);
-	if (n >= MAX_SCHEMES) vCRASH(RP_MAX_SCHEMES);
+	if (n >= MAX_SCHEMES) vCrash(RP_MAX_SCHEMES);
 
 	Scheme_Actions[n].sym = sym;
 	Scheme_Actions[n].map = map;

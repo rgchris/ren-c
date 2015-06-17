@@ -215,7 +215,7 @@ const REBYTE evoke_help[] = "Evoke values:\n"
 				Expand_Stack(Int32s(arg, 1));
 				break;
 			case SYM_CRASH:
-				CRASH(RP_MISC);
+				Crash(RP_MISC);
 				break;
 			default:
 				Out_Str(evoke_help, 1);

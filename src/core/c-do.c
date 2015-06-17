@@ -100,7 +100,7 @@ static REBVAL *Func_Word(REBINT dsf)
 **
 ***********************************************************************/
 {
-	if (SERIES_REST(DS_Series) >= STACK_LIMIT) Trap0(RE_STACK_OVERFLOW);
+	if (SERIES_REST(DS_Series) >= STACK_LIMIT) vTrap0(RE_STACK_OVERFLOW);
 	DS_Series->tail = DSP+1;
 	Extend_Series(DS_Series, amount);
 	DS_Base = BLK_HEAD(DS_Series);
@@ -384,7 +384,7 @@ void Trace_Arg(REBINT num, REBVAL *arg, REBVAL *path)
 	// object/:field case:
 	if (IS_GET_WORD(path = pvs->path)) {
 		pvs->select = Get_Var(path);
-		if (IS_UNSET(pvs->select)) Trap1(RE_NO_VALUE, path);
+		if (IS_UNSET(pvs->select)) vTrap1(RE_NO_VALUE, path);
 	}
 	// object/(expr) case:
 	else if (IS_PAREN(path)) {
@@ -416,13 +416,15 @@ void Trace_Arg(REBINT num, REBVAL *arg, REBVAL *path)
 		pvs->value = pvs->store;
 		break;
 	case PE_BAD_SELECT:
-		Trap2(RE_INVALID_PATH, pvs->orig, pvs->path);
+		vTrap2(RE_INVALID_PATH, pvs->orig, pvs->path);
 	case PE_BAD_SET:
-		Trap2(RE_BAD_PATH_SET, pvs->orig, pvs->path);
+		vTrap2(RE_BAD_PATH_SET, pvs->orig, pvs->path);
 	case PE_BAD_RANGE:
-		Trap_Range(pvs->path);
+		vTrap_Range(pvs->path);
 	case PE_BAD_SET_TYPE:
-		Trap2(RE_BAD_FIELD_SET, pvs->path, Of_Type(pvs->setval));
+		vTrap2(RE_BAD_FIELD_SET, pvs->path, Of_Type(pvs->setval));
+	default:
+		vCrash(RP_MISC);
 	}
 
 	if (NOT_END(pvs->path+1)) Next_Path(pvs);
@@ -525,10 +527,12 @@ void Trace_Arg(REBINT num, REBVAL *arg, REBVAL *path)
 		pvs.value = pvs.store;
 		break;
 	case PE_BAD_SELECT:
-		Trap2(RE_INVALID_PATH, pvs.value, pvs.select);
+		vTrap2(RE_INVALID_PATH, pvs.value, pvs.select);
 	case PE_BAD_SET:
-		Trap2(RE_BAD_PATH_SET, pvs.value, pvs.select);
+		vTrap2(RE_BAD_PATH_SET, pvs.value, pvs.select);
 		break;
+	default:
+		vCrash(RP_MISC);
 	}
 }
 
@@ -967,7 +971,7 @@ eval_func2:
 
 	default:
 		//Debug_Fmt("Bad eval: %d %s", VAL_TYPE(value), Get_Type_Name(value));
-		CRASH1(RP_BAD_EVALTYPE, VAL_TYPE(value));
+		Crash1(RP_BAD_EVALTYPE, VAL_TYPE(value));
 		//return -index;
 	}
 
@@ -1359,7 +1363,7 @@ eval_func2:
 			}
 			// If arg is typed, verify correct argument datatype:
 			if (!TYPE_CHECK(args, VAL_TYPE(val)))
-				Trap3(RE_EXPECT_ARG, Func_Word(dsf), args, Of_Type(val));
+				vTrap3(RE_EXPECT_ARG, Func_Word(dsf), args, Of_Type(val));
 			args++;
 			val++;
 		}
@@ -1829,7 +1833,7 @@ eval_func2:
 				break;
 
 			default:
-				vCRASH(RP_MISC);
+				vCrash(RP_MISC);
 		}
 push_arg:
 		DS_PUSH(DSF_ARGS(DSF, isrc));

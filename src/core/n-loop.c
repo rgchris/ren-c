@@ -109,7 +109,7 @@
 		VAL_INDEX(var) = si;
 		result = Do_Blk(body, 0);
 		if (THROWN(result) && Check_Error(result) >= 0) break;
-		if (VAL_TYPE(var) != type) Trap1(RE_INVALID_TYPE, var);
+		if (VAL_TYPE(var) != type) vTrap1(RE_INVALID_TYPE, var);
 		si = VAL_INDEX(var);
 	}
 }
@@ -129,7 +129,7 @@
 		VAL_INT64(var) = start;
 		result = Do_Blk(body, 0);
 		if (THROWN(result) && Check_Error(result) >= 0) break;
-		if (!IS_INTEGER(var)) Trap_Type(var);
+		if (!IS_INTEGER(var)) vTrap_Type(var);
 		start = VAL_INT64(var);
 	}
 }
@@ -146,17 +146,17 @@
 	REBDEC e;
 	REBDEC i;
 
-	if (IS_INTEGER(start)) s = (REBDEC)VAL_INT64(start);
+	if (IS_INTEGER(start)) s = sCAST(REBDEC, VAL_INT64(start));
 	else if (IS_DECIMAL(start) || IS_PERCENT(start)) s = VAL_DECIMAL(start);
-	else Trap_Arg(start);
+	else vTrap_Arg(start);
 
-	if (IS_INTEGER(end)) e = (REBDEC)VAL_INT64(end);
+	if (IS_INTEGER(end)) e = sCAST(REBDEC, VAL_INT64(end));
 	else if (IS_DECIMAL(end) || IS_PERCENT(end)) e = VAL_DECIMAL(end);
-	else Trap_Arg(end);
+	else vTrap_Arg(end);
 
-	if (IS_INTEGER(incr)) i = (REBDEC)VAL_INT64(incr);
+	if (IS_INTEGER(incr)) i = sCAST(REBDEC, VAL_INT64(incr));
 	else if (IS_DECIMAL(incr) || IS_PERCENT(incr)) i = VAL_DECIMAL(incr);
-	else Trap_Arg(incr);
+	else vTrap_Arg(incr);
 
 	VAL_SET(var, REB_DECIMAL);
 
@@ -164,7 +164,7 @@
 		VAL_DECIMAL(var) = s;
 		result = Do_Blk(body, 0);
 		if (THROWN(result) && Check_Error(result) >= 0) break;
-		if (!IS_DECIMAL(var)) Trap_Type(var);
+		if (!IS_DECIMAL(var)) vTrap_Type(var);
 		s = VAL_DECIMAL(var);
 	}
 }

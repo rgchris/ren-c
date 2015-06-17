@@ -70,7 +70,7 @@
 // See boot/errors.r for the list of the form some-error-name: that makes
 // RE_SOME_ERROR_NAME definitions you can use. 
 //
-// If a serious condition warranting termination is detected, use CRASH()
+// If a serious condition warranting termination is detected, use Crash()
 // and add a RP_SOME_CRASH condition.  These values are not generated, so
 // you can modify them directly in the enumeration of the C file.
 
@@ -376,35 +376,126 @@ enum encoding_opts {
 
 // Trigger an assertion failure that uniquely indicates the error's origin
 // in debug builds, while crashing in debug builds and also indicating a
-// "dead end".  Has a CRASH_V variant returning void match DEAD_END_V
+// "dead end".  Has a vCrash() variant returning void match vDEAD_END
+//
+// !!! Although these are macros, the original implementations of them were
+// C functions.  They could thus not indicate a "dead end" to the compiler.
+// While turning them to uppercase was tried, it seemed to create slightly
+// less churn to retain them as mixed case.  This should be reviewed in
+// light of a hard-line "preprocessor macros must be uppercase" policy.
 
-#define CRASH(rp) \
+#define Crash(rp) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core(rp); \
 		DEAD_END; \
 	} while (0)
 
-#define CRASH1(rp, a) \
+#define Crash1(rp, a) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core((rp), (a)); \
 		DEAD_END; \
 	} while (0)
 
-#define vCRASH(rp) \
+#define vCrash(rp) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core(rp); \
 		vDEAD_END; \
 	} while (0)
 
-#define vCRASH1(rp, a) \
+#define vCrash1(rp, a) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core((rp), (a)); \
 		vDEAD_END; \
 	} while (0)
+
+
+// !!! Same idea but for traps...
+
+#define Trap3(re,a1,a2,a3) \
+	do { \
+		Throw_Error(Make_Error((re), (a1), (a2), (a3))); \
+		DEAD_END; \
+	} while (0)
+
+#define Trap0(re) \
+	Trap3((re), 0, 0, 0)
+
+#define Trap1(re,a1) \
+	Trap3((re), (a1), 0, 0)
+
+#define Trap2(re,a1,a2) \
+	Trap3((re), (a1), (a2), 0)
+
+#define Trap_Arg(a) \
+	Trap1(RE_INVALID_ARG, (a))
+
+#define Trap_Type(a) \
+	Trap1(RE_INVALID_TYPE, Of_Type(a))
+
+#define Trap_Range(a) \
+	Trap1(RE_OUT_OF_RANGE, (a))
+
+#define Trap_Make(t,s) \
+	Trap2(RE_BAD_MAKE_ARG, Get_Type(t), (s));
+
+#define Trap_Reflect(t,a) \
+	/* currently ignores type */ \
+	Trap_Arg(a)
+
+#define Trap_Action(t,a) \
+	Trap2(RE_CANNOT_USE, Get_Action_Word(a), Get_Type(t))
+
+#define Trap_Types(re,t1,t2) \
+	do { \
+		Trap_Types_Core((re), (t1), (t2)); \
+		DEAD_END; \
+	} while(0)
+
+
+
+#define vTrap3(re,a1,a2,a3) \
+	do { \
+		Throw_Error(Make_Error((re), (a1), (a2), (a3))); \
+		vDEAD_END; \
+	} while (0)
+
+#define vTrap0(re) \
+	vTrap3((re), 0, 0, 0)
+
+#define vTrap1(re,a1) \
+	vTrap3((re), (a1), 0, 0)
+
+#define vTrap2(re,a1,a2) \
+	vTrap3((re), (a1), (a2), 0)
+
+#define vTrap_Arg(re) \
+	vTrap1(RE_INVALID_ARG, re)
+
+#define vTrap_Type(re) \
+	vTrap1(RE_INVALID_TYPE, Of_Type(re))
+
+#define vTrap_Range(re) \
+	vTrap1(RE_OUT_OF_RANGE, (re))
+
+#define vTrap_Make(t,s) \
+	vTrap2(RE_BAD_MAKE_ARG, Get_Type(t), (s));
+
+#define vTrap_Reflect(t, a) \
+	/* currently ignores type */ \
+	vTrap_Arg(a)
+
+#define vTrap_Action(t,a) \
+	vTrap2(RE_CANNOT_USE, Get_Action_Word(a), Get_Type(t))
+
+#define vTrap_Types(re,t1,t2) \
+	do { \
+		Trap_Types_Core((re), (t1), (t2)); \
+		vDEAD_END; \
+	} while(0)
 
 
 #define	NO_RESULT	((REBCNT)(-1))

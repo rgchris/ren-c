@@ -50,7 +50,7 @@
 static void No_Nones(REBVAL *arg) {
 	arg = VAL_BLK_DATA(arg);
 	for (; NOT_END(arg); arg++) {
-		if (IS_NONE(arg)) Trap_Arg(arg);
+		if (IS_NONE(arg)) vTrap_Arg(arg);
 	}
 }
 
@@ -340,7 +340,7 @@ static void No_Nones(REBVAL *arg) {
 			Set_Series(type, value, Make_Block(len));
 			return;
 		}
-		Trap_Arg(arg);
+		vTrap_Arg(arg);
 	}
 
 	ser = Copy_Values(arg, 1);
@@ -459,7 +459,7 @@ static struct {
 	if (!IS_NONE(skipv)) {
 		skip = Get_Num_Arg(skipv);
 		if (skip <= 0 || len % skip != 0 || skip > len)
-			Trap_Range(skipv);
+			vTrap_Range(skipv);
 	}
 
 	// Use fast quicksort library function:

@@ -178,7 +178,8 @@
 		val = blk++;
 		if (IS_END(val)) val = NONE_VALUE;
 		else val = Get_Simple_Value(val);
-		if (!Set_Event_Var(evt, var, val)) Trap2(RE_BAD_FIELD_SET, var, Of_Type(val));
+		if (!Set_Event_Var(evt, var, val))
+			vTrap2(RE_BAD_FIELD_SET, var, Of_Type(val));
 	}
 }
 

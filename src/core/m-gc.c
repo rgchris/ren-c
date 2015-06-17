@@ -239,7 +239,7 @@ static void Mark_Series(REBSER *series, REBCNT depth);
 		case REB_END:
 			// We should never reach the end before len above.
 			// Exception is the stack itself.
-			if (series != DS_Series) vCRASH(RP_UNEXPECTED_END);
+			if (series != DS_Series) vCrash(RP_UNEXPECTED_END);
 			break;
 
 		case REB_UNSET:
@@ -261,7 +261,7 @@ static void Mark_Series(REBSER *series, REBCNT depth);
 			if (VAL_ERR_NUM(val) > RE_THROW_MAX) {
 				if (VAL_ERR_OBJECT(val)) CHECK_MARK(VAL_ERR_OBJECT(val), depth);
 			}
-			// else CRASH(RP_THROW_IN_GC); // !!!! in question - is it true?
+			// else Crash(RP_THROW_IN_GC); // !!!! in question - is it true?
 			break;
 
 		case REB_TASK: // not yet implemented
@@ -382,7 +382,7 @@ mark_obj:
 			}
 
 			if (!IS_END(BLK_SKIP(ser, SERIES_TAIL(ser))) && ser != DS_Series)
-				vCRASH(RP_MISSING_END);
+				vCrash(RP_MISSING_END);
 
 			if (
 				SERIES_WIDE(ser) != sizeof(REBVAL)
@@ -436,12 +436,12 @@ mark_obj:
 			break;
 
 		default:
-			vCRASH1(RP_DATATYPE + 1, VAL_TYPE(val));
+			vCrash1(RP_DATATYPE + 1, VAL_TYPE(val));
 		}
 	}
 
 	if (!IS_END(BLK_SKIP(series, len)) && series != DS_Series)
-		vCRASH(RP_MISSING_END);
+		vCrash(RP_MISSING_END);
 }
 
 

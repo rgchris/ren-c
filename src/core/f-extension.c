@@ -120,7 +120,7 @@ x*/	RXIARG Value_To_RXI(REBVAL *val)
 
 /***********************************************************************
 **
-x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, REBCNT type)
+x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, int type)
 /*
 ***********************************************************************/
 {
@@ -192,7 +192,7 @@ x*/	int Do_Callback(REBSER *obj, u32 name, RXIARG *args, RXIARG *result)
 ***********************************************************************/
 {
 	REBVAL *val;
-	REBCNT dsf;
+	REBINT dsf;
 	REBCNT len;
 	REBCNT n;
 	REBCNT dsp = DSP; // to restore stack on errors
@@ -408,13 +408,13 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 		|| !IS_HANDLE(VAL_OBJ_VALUE(val, 1))
 		|| !IS_INTEGER(val+1)
 		|| VAL_INT64(val+1) > 0xffff
-	) Trap1(RE_BAD_FUNC_DEF, def);
+	) vTrap1(RE_BAD_FUNC_DEF, def);
 
 	val = VAL_OBJ_VALUE(val, 1);
 	if (
 		!(ext = &Ext_List[VAL_I32(val)])
 		|| !(ext->call)
-	) Trap1(RE_BAD_EXTENSION, def);
+	) vTrap1(RE_BAD_EXTENSION, def);
 
 	// make command! [[arg-spec] handle cmd-index]
 	VAL_FUNC_BODY(value) = Copy_Block_Len(VAL_SERIES(def), 1, 2);
@@ -426,7 +426,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 		// If the typeset contains args that are not valid:
 		// (3 is the default when no args given, for not END and UNSET)
 		if (3 != ~VAL_TYPESET(args) && (VAL_TYPESET(args) & ~RXT_ALLOWED_TYPES))
-			Trap1(RE_BAD_FUNC_ARG, args);
+			vTrap1(RE_BAD_FUNC_ARG, args);
 	}
 
 	VAL_SET(value, REB_COMMAND);
@@ -461,7 +461,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 
 	// Copy args to command frame (array of args):
 	RXA_COUNT(&frm) = argc = SERIES_TAIL(VAL_FUNC_ARGS(value))-1; // not self
-	if (argc > 7) Trap0(RE_BAD_COMMAND);
+	if (argc > 7) vTrap0(RE_BAD_COMMAND);
 	val = DS_ARG(1);
 	for (n = 1; n <= argc; n++, val++) {
 		RXA_TYPE(&frm, n) = Reb_To_RXT[VAL_TYPE(val)];
@@ -542,7 +542,8 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 			else func = Get_Var(blk); // fallback
 		} else func = blk;
 
-		if (!IS_COMMAND(func)) Trap2(RE_EXPECT_VAL, Get_Type_Word(REB_COMMAND), blk);
+		if (!IS_COMMAND(func))
+			vTrap2(RE_EXPECT_VAL, Get_Type_Word(REB_COMMAND), blk);
 
 		// Advance to next value
 		blk++;
@@ -560,7 +561,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 			//Debug_Type(args);
 			val = blk++;
 			index++;
-			if (IS_END(val)) Trap2(RE_NO_ARG, cmd_word, args);
+			if (IS_END(val)) vTrap2(RE_NO_ARG, cmd_word, args);
 			//Debug_Type(val);
 
 			// actual arg is a word, lookup?
@@ -579,7 +580,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 
 			// check datatype
 			if (!TYPE_CHECK(args, VAL_TYPE(val)))
-				Trap3(RE_EXPECT_ARG, cmd_word, args, Of_Type(val));
+				vTrap3(RE_EXPECT_ARG, cmd_word, args, Of_Type(val));
 
 			// put arg into command frame
 			n++;
@@ -650,7 +651,7 @@ xx*/	REBVAL *Prior_Func_Frame(void)
 /*
 ***********************************************************************/
 {
-	REBCNT dsf = DSF;
+	REBINT dsf = DSF;
 	REBVAL *val;
 
 	for (dsf = DSF; dsf > 0; dsf = PRIOR_DSF(dsf)) {

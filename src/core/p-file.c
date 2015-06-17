@@ -52,12 +52,12 @@
 
 	if (args & AM_OPEN_NEW) {
 		SET_FLAG(file->modes, RFM_NEW);
-		if (!(args & AM_OPEN_WRITE)) Trap1(RE_BAD_FILE_MODE, path);
+		if (!(args & AM_OPEN_WRITE)) vTrap1(RE_BAD_FILE_MODE, path);
 	}
 
 	// Convert file name to OS format, let it GC later.
 	if (!(ser = Value_To_OS_Path(path)))
-		Trap1(RE_BAD_FILE_PATH, path);
+		vTrap1(RE_BAD_FILE_PATH, path);
 	
 	file->special.file.path = rCAST(REBCHR *, ser->data);
 
@@ -132,7 +132,7 @@
 **
 ***********************************************************************/
 {
-	if (Is_Port_Open(port)) Trap1(RE_ALREADY_OPEN, path);
+	if (Is_Port_Open(port)) vTrap1(RE_ALREADY_OPEN, path);
 
 	if (OS_DO_DEVICE(file, RDC_OPEN) < 0) Trap_Port(RE_CANNOT_OPEN, port, file->error);
 

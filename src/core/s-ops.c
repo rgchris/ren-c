@@ -704,7 +704,7 @@ static REBYTE seed_str[SEED_LEN] = {
 
 	// String series:
 
-	if (IS_PROTECT_SERIES(VAL_SERIES(val))) Trap0(RE_PROTECTED);
+	if (IS_PROTECT_SERIES(VAL_SERIES(val))) vTrap0(RE_PROTECTED);
 
 	len = Partial(val, 0, part, 0);
 	n = VAL_INDEX(val);

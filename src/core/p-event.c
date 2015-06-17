@@ -84,7 +84,7 @@ REBREQ *req;		//!!! move this global
 	if (!IS_BLOCK(state)) return 0;
 
 	// Append to tail if room:
-	if (SERIES_FULL(VAL_SERIES(state))) CRASH(RP_MAX_EVENTS);
+	if (SERIES_FULL(VAL_SERIES(state))) Crash(RP_MAX_EVENTS);
 	VAL_TAIL(state)++;
 	value = VAL_BLK_TAIL(state);
 	SET_END(value);

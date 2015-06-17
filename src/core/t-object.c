@@ -82,7 +82,7 @@ static void Append_Obj(REBSER *obj, const REBVAL *arg)
 		if (!Find_Word_Index(obj, VAL_WORD_SYM(arg), TRUE)) {
 			// bug fix, 'self is protected only in selfish frames
 			if ((VAL_WORD_CANON(arg) == SYM_SELF) && !IS_SELFLESS(obj))
-				Trap0(RE_SELF_PROTECTED);
+				vTrap0(RE_SELF_PROTECTED);
 			Expand_Frame(obj, 1, 1); // copy word table also
 			Append_Frame(obj, 0, VAL_WORD_SYM(arg));
 			// val is UNSET
@@ -90,7 +90,7 @@ static void Append_Obj(REBSER *obj, const REBVAL *arg)
 		return;
 	}
 
-	if (!IS_BLOCK(arg)) Trap_Arg(arg);
+	if (!IS_BLOCK(arg)) vTrap_Arg(arg);
 
 	// Process word/value argument block:
 	arg = VAL_BLK_DATA(arg);
@@ -109,7 +109,7 @@ static void Append_Obj(REBSER *obj, const REBVAL *arg)
 			// release binding table
 			BLK_TERM(BUF_WORDS);
 			Collect_End(obj);
-			Trap_Arg(word);
+			vTrap_Arg(word);
 		}
 
 		if (NZ(i = binds[VAL_WORD_CANON(word)])) {
@@ -118,7 +118,7 @@ static void Append_Obj(REBSER *obj, const REBVAL *arg)
 				// release binding table
 				BLK_TERM(BUF_WORDS);
 				Collect_End(obj);
-				Trap0(RE_SELF_PROTECTED);
+				vTrap0(RE_SELF_PROTECTED);
 			}
 		} else {
 			// collect the word
@@ -147,8 +147,8 @@ static void Append_Obj(REBSER *obj, const REBVAL *arg)
 			// release binding table
 			Collect_End(obj);
 			if (VAL_PROTECTED(FRM_WORD(obj, i)))
-				Trap1(RE_LOCKED_WORD, FRM_WORD(obj, i));
-			Trap0(RE_HIDDEN);
+				vTrap1(RE_LOCKED_WORD, FRM_WORD(obj, i));
+			vTrap0(RE_HIDDEN);
 		}
 
 		if (IS_END(word + 1)) SET_NONE(val);

@@ -215,7 +215,7 @@
 		// Path did not end with /, so we better be wild:
 		if (wild == 0) {
 			///OS_FREE_MEM(dir->special.file.path);
-			Trap1(RE_BAD_FILE_PATH, path);
+			vTrap1(RE_BAD_FILE_PATH, path);
 		}
 		else if (wild < 0) {
 			dir->special.file.path[len++] = OS_DIR_SEP;

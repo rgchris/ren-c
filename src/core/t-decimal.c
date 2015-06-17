@@ -122,7 +122,7 @@ REBOOL almost_equal(REBDEC a, REBDEC b, REBCNT max_diff) {
 	if (IS_DECIMAL(data))
 		*out = *data;
 	else if (IS_INTEGER(data)) {
-		SET_DECIMAL(out, (REBDEC)VAL_INT64(data));
+		SET_DECIMAL(out, sCAST(REBDEC, VAL_INT64(data)));
 	}
 	else return FALSE;
 
@@ -187,7 +187,7 @@ REBOOL almost_equal(REBDEC a, REBDEC b, REBCNT max_diff) {
 /*
 ***********************************************************************/
 {
-	if (!FINITE(dval)) Trap0(RE_OVERFLOW);
+	if (!FINITE(dval)) vTrap0(RE_OVERFLOW);
 }
 
 

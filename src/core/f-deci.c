@@ -41,11 +41,6 @@
 #include "sys-deci-funcs.h"
 #include "sys-dec-to-char.h"
 
-#ifndef TEST_MODE
-#define OVERFLOW_ERROR Trap0(RE_OVERFLOW)
-#define DIVIDE_BY_ZERO_ERROR Trap0(RE_ZERO_DIVIDE)
-#endif
-
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 #define MASK32(i) (REBCNT)(i)
@@ -58,6 +53,22 @@ static const deci deci_zero = {0u, 0u, 0u, 0u, 0};
 static const deci deci_one = {1u, 0u, 0u, 0u, 0};
 static const deci deci_minus_one = {1u, 0u, 0u, 1u, 0};
 /* end of deci constants */
+
+#ifndef TEST_MODE
+	#define OVERFLOW_ERROR \
+		do { \
+			assert(FALSE); /* fail here in Debug build */ \
+			Throw_Error(Make_Error(RE_OVERFLOW, 0, 0, 0)); \
+			return deci_minus_one; \
+		} while (0)
+
+	#define DIVIDE_BY_ZERO_ERROR \
+		do { \
+			assert(FALSE); /* fail here in Debug build */ \
+			Throw_Error(Make_Error(RE_ZERO_DIVIDE, 0, 0, 0)); \
+			return deci_minus_one; \
+		} while (0)
+#endif
 
 static const REBCNT min_int64_t_as_deci[] = {0u, 0x80000000u, 0u};
 
@@ -506,19 +517,19 @@ REBI64 deci_to_int (deci a) {
 	if (m_is_zero (3, sa) || (a.e < -26)) return (REBI64) 0;
 	
 	/* handle exponent */
-	if (a.e >= 20) OVERFLOW_ERROR;
+	if (a.e >= 20) Trap0(RE_OVERFLOW);
 	if (a.e > 0)
-		if (m_cmp (3, P[20 - a.e], sa) <= 0) OVERFLOW_ERROR;
+		if (m_cmp (3, P[20 - a.e], sa) <= 0) Trap0(RE_OVERFLOW);
 		else dsl (3, sa, a.e);
 	else if (a.e < 0) dsr (3, sa, -a.e, &ta);
 	
 	/* convert significand to integer */
-	if (m_cmp (3, sa, min_int64_t_as_deci) > 0) OVERFLOW_ERROR;
+	if (m_cmp (3, sa, min_int64_t_as_deci) > 0) Trap0(RE_OVERFLOW);
 	result = ((REBI64) sa[1] << 32) | (REBI64) sa[0];
 	
 	/* handle sign */
 	if (a.s) result = -result;
-	if (!a.s && (result < 0)) OVERFLOW_ERROR;
+	if (!a.s && (result < 0)) Trap0(RE_OVERFLOW);
 	 
 	return result;
 }
@@ -571,7 +582,7 @@ void m_ldexp (REBCNT a[4], REBINT *f, REBINT e, REBINT ta) {
 	}
 
 	/* take care of exponent overflow */
-	if (e >= 281) OVERFLOW_ERROR;
+	if (e >= 281) vTrap0(RE_OVERFLOW);
 	if (e < -281) e = -282;
 	
 	*f += e;
@@ -593,7 +604,8 @@ void m_ldexp (REBCNT a[4], REBINT *f, REBINT e, REBINT ta) {
 	
 	/* decimally shift the significand to the left if needed */
 	if (*f > 127) {
-		if ((*f >= 153) || (m_cmp (3, P[153 - *f], a) <= 0)) OVERFLOW_ERROR;
+		if ((*f >= 153) || (m_cmp (3, P[153 - *f], a) <= 0))
+			vTrap0(RE_OVERFLOW);
 		dsl (3, a, *f - 127);
 		*f = 127;
 	}

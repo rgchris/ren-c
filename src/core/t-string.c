@@ -329,7 +329,7 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 	if (!IS_NONE(skipv)) {
 		skip = Get_Num_Arg(skipv);
 		if (skip <= 0 || len % skip != 0 || skip > len)
-			Trap_Arg(skipv);
+			vTrap_Arg(skipv);
 	}
 
 	// Use fast quicksort library function:

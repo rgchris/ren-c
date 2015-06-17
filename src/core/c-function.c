@@ -319,7 +319,7 @@
 			*ds = *D_ARG(3);
 			break;
 		default:
-			vCRASH(RP_MISC);
+			vCrash(RP_MISC);
 		}
 	}
 }
@@ -336,7 +336,7 @@
 
 	action = Value_Dispatch[type];
 	assert(action != 0);
-	if (!action) Trap_Action(type, act);
+	if (!action) vTrap_Action(type, act);
 	ret = action(ds, act);
 	if (ret > 0) {
 		ds = DS_RETURN;
@@ -371,7 +371,7 @@
 			*ds = *D_ARG(3);
 			break;
 		default:
-			vCRASH(RP_MISC);
+			vCrash(RP_MISC);
 		}
 	}
 }
@@ -388,7 +388,7 @@
 
 	Eval_Natives++;
 
-	if (type >= REB_MAX) vCRASH(RP_BAD_TYPE_ACTION);
+	if (type >= REB_MAX) vCrash(RP_BAD_TYPE_ACTION);
 
 	// Handle special datatype test cases (eg. integer?)
 	if (VAL_FUNC_ACT(func) == 0) {

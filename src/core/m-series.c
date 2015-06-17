@@ -79,7 +79,7 @@
 	}
 
 	// Range checks:
-	if (delta & 0x80000000) Trap0(RE_PAST_END); // 2GB max
+	if (delta & 0x80000000) vTrap0(RE_PAST_END); // 2GB max
 	if (index > series->tail) index = series->tail; // clip
 
 	// Width adjusted variables:
@@ -91,7 +91,7 @@
 	// Do we need to expand the current series allocation?
 	// WARNING: Do not use ">=" below or newser size may be the same!
 	if ((size + extra) > SERIES_SPACE(series)) {
-		if (IS_LOCK_SERIES(series)) vCRASH(RP_LOCKED_SERIES);
+		if (IS_LOCK_SERIES(series)) vCrash(RP_LOCKED_SERIES);
 		//DISABLE_GC; // Don't let GC occur just for an expansion.
 
 		if (Reb_Opts->watch_expand) {
@@ -154,7 +154,7 @@
 
 	if ((SERIES_TAIL(series) + SERIES_BIAS(series)) * wide >= SERIES_TOTAL(series)) {
 		Dump_Series(series, "Overflow");
-		vCRASH(RP_OVER_SERIES);
+		vCrash(RP_OVER_SERIES);
 	}
 
 	CHECK_MEMORY(3);
@@ -532,7 +532,7 @@
 **
 ***********************************************************************/
 {
-	if (!buf) CRASH(RP_NO_BUFFER);
+	if (!buf) Crash(RP_NO_BUFFER);
 
 	RESET_TAIL(buf);
 	if (SERIES_BIAS(buf)) Reset_Bias(buf);

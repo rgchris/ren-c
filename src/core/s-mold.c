@@ -1269,7 +1269,7 @@ static void Mold_Error(REBVAL *value, REB_MOLD *mold, REBFLG molded)
 		break;
 
 	default:
-		vCRASH1(RP_DATATYPE + 5, VAL_TYPE(value));
+		vCrash1(RP_DATATYPE + 5, VAL_TYPE(value));
 	}
 	return;
 
@@ -1372,7 +1372,7 @@ append:
 	memset(mold, NUL, sizeof(*mold));
 	mold->opts = opts;
 
-	if (!buf) vCRASH(RP_NO_BUFFER);
+	if (!buf) vCrash(RP_NO_BUFFER);
 
 	if (SERIES_REST(buf) > MAX_COMMON)
 		Shrink_Series(buf, MIN_COMMON);

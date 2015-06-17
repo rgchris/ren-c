@@ -401,7 +401,7 @@ chk_neg:
 	REBVAL *val = D_ARG(1);
 	REBSER *port = VAL_PORT(val);
 
-	if (SERIES_TAIL(port) < STD_PORT_MAX) CRASH(RP_MISC);
+	if (SERIES_TAIL(port) < STD_PORT_MAX) Crash(RP_MISC);
 
 	val = OFV(port, STD_PORT_ACTOR);
 	if (IS_NATIVE(val)) {
@@ -695,7 +695,7 @@ chk_neg:
 			// request... and that is controlled by a #ifdef TO_WIN32
 			// switch.
 
-			CRASH(RP_NOT_AVAILABLE);
+			Crash(RP_NOT_AVAILABLE);
 		#endif
 			Set_Series(REB_FILE, Append_Value(blk), Copy_String(dir, 0, -1));
 			str += n + 1; // next

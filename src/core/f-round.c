@@ -221,7 +221,12 @@ enum {
 	REBDCI deci_one = {1u, 0u, 0u, 0u, 0};
 
 	if (GET_FLAG(flags, RF_TO)) {
-		if (deci_is_zero(scale)) Trap0(RE_ZERO_DIVIDE);
+		if (deci_is_zero(scale)) {
+			Throw_Error(Make_Error(RE_ZERO_DIVIDE, 0, 0, 0));
+			// UNREACHABLE, but we want to make compiler happy...
+			assert(FALSE);
+			return deci_one;
+		}
 		scale = deci_abs(scale);
 	}
 	else scale = deci_one;

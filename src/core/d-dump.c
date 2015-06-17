@@ -183,7 +183,7 @@ xx*/  REBSER *Dump_Value(REBVAL *block, REBSER *series)
 	REB_MOLD mo = {0};
 	mo.digits = 17; // max digits
 
-	if (VAL_TYPE(block) >= REB_MAX) CRASH(RP_DATATYPE+7, VAL_TYPE(block));
+	if (VAL_TYPE(block) >= REB_MAX) Crash(RP_DATATYPE+7, VAL_TYPE(block));
 
 	assert(series);
 	mo.series = series; 

@@ -219,7 +219,7 @@
 
 	// Reuse a global word list block because length of block cannot
 	// be known until all words are scanned. Then copy this block.
-	if (SERIES_TAIL(BUF_WORDS)) vCRASH(RP_WORD_LIST); // still in use
+	if (SERIES_TAIL(BUF_WORDS)) vCrash(RP_WORD_LIST); // still in use
 
 	// Add the SELF word to slot zero.
 	if ((modes = (modes & BIND_NO_SELF)?0:SYM_SELF))
@@ -316,7 +316,7 @@
 					for (word = BLK_HEAD(BUF_WORDS); NOT_END(word); word++)
 						binds[VAL_WORD_CANON(word)] = 0;
 					RESET_TAIL(BUF_WORDS);  // allow reuse
-					Trap1(RE_DUP_VARS, value);
+					vTrap1(RE_DUP_VARS, value);
 				}
 			}
 			continue;
@@ -402,7 +402,7 @@
 	REBINT *binds = WORDS_HEAD(Bind_Table); // GC safe to do here
 	CHECK_BIND_TABLE;
 
-	if (SERIES_TAIL(BUF_WORDS)) CRASH(RP_WORD_LIST); // still in use
+	if (SERIES_TAIL(BUF_WORDS)) Crash(RP_WORD_LIST); // still in use
 
 	if (prior)
 		Collect_Simple_Words(prior, BIND_ALL);
@@ -567,7 +567,7 @@
 	REBVAL *word  = BLK_HEAD(VAL_OBJ_WORDS(value));
 
 	for (; NOT_END(word); word++) 
-		if (VAL_GET_OPT(word, OPTS_HIDE)) Trap0(RE_HIDDEN);
+		if (VAL_GET_OPT(word, OPTS_HIDE)) vTrap0(RE_HIDDEN);
 }
 
 
@@ -692,7 +692,7 @@
 
 	CHECK_BIND_TABLE;
 
-	if (IS_PROTECT_SERIES(target)) Trap0(RE_PROTECTED);
+	if (IS_PROTECT_SERIES(target)) vTrap0(RE_PROTECTED);
 
 	if (IS_INTEGER(only_words)) { // Must be: 0 < i <= tail
 		i = VAL_INT32(only_words); // never <= 0
@@ -1009,7 +1009,7 @@
 	REBINT index;
 
 	index = Find_Arg_Index(frame, VAL_WORD_SYM(word));
-	if (!index) Trap1(RE_NOT_IN_CONTEXT, word);
+	if (!index) vTrap1(RE_NOT_IN_CONTEXT, word);
 	VAL_WORD_FRAME(word) = frame;
 	VAL_WORD_INDEX(word) = -index;
 }
@@ -1280,7 +1280,7 @@
 
 	if (THROWN(value)) return;
 
-	if (!HAS_FRAME(word)) Trap1(RE_NOT_DEFINED, word);
+	if (!HAS_FRAME(word)) vTrap1(RE_NOT_DEFINED, word);
 
 	assert(VAL_WORD_FRAME(word));
 //  Print("Set %s to %s [frame: %x idx: %d]", Get_Word_Name(word), Get_Type_Name(value), VAL_WORD_FRAME(word), VAL_WORD_INDEX(word));
@@ -1288,17 +1288,17 @@
 	if (index > 0) {
 		frm = VAL_WORD_FRAME(word);
 		if (VAL_PROTECTED(FRM_WORDS(frm)+index))
-			Trap1(RE_LOCKED_WORD, word);
+			vTrap1(RE_LOCKED_WORD, word);
 		FRM_VALUES(frm)[index] = *value;
 		return;
 	}
-	if (index == 0) Trap0(RE_SELF_PROTECTED);
+	if (index == 0) vTrap0(RE_SELF_PROTECTED);
 
 	// Find relative value:
 	dsf = DSF;
 	while (VAL_WORD_FRAME(word) != VAL_WORD_FRAME(DSF_WORD(dsf))) {
 		dsf = PRIOR_DSF(dsf);
-		if (dsf <= 0) Trap1(RE_NOT_DEFINED, word); // change error !!!
+		if (dsf <= 0) vTrap1(RE_NOT_DEFINED, word); // change error !!!
 	}
 	*DSF_ARGS(dsf, -index) = *value;
 }

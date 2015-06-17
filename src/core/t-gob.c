@@ -29,8 +29,6 @@
 
 #include "sys-core.h"
 
-void Trap_Temp(void) {Trap0(501);} //!!! temp trap function
-
 const REBCNT Gob_Flag_Words[] = {
 	SYM_RESIZE,      GOBF_RESIZE,
 	SYM_NO_TITLE,    GOBF_NO_TITLE,
@@ -218,7 +216,7 @@ const REBCNT Gob_Flag_Words[] = {
 		val = arg++;
 		if (IS_WORD(val)) val = Get_Var(val);
 		if (IS_GOB(val)) {
-			if GOB_PARENT(VAL_GOB(val)) Trap_Temp();
+			if GOB_PARENT(VAL_GOB(val)) vTrap0(RE_MISC);
 			*ptr++ = VAL_GOB(val);
 			GOB_PARENT(VAL_GOB(val)) = gob;
 			SET_GOB_STATE(VAL_GOB(val), GOBS_NEW);
@@ -569,11 +567,13 @@ is_none:
 	while (NOT_END(blk)) {
 		var = blk++;
 		val = blk++;
-		if (!IS_SET_WORD(var)) Trap2(RE_EXPECT_VAL, Get_Type(REB_SET_WORD), Of_Type(var));
+		if (!IS_SET_WORD(var))
+			vTrap2(RE_EXPECT_VAL, Get_Type(REB_SET_WORD), Of_Type(var));
 		if (IS_END(val) || IS_UNSET(val) || IS_SET_WORD(val))
-			Trap1(RE_NEED_VALUE, var);
+			vTrap1(RE_NEED_VALUE, var);
 		val = Get_Simple_Value(val);
-		if (!Set_GOB_Var(gob, var, val)) Trap2(RE_BAD_FIELD_SET, var, Of_Type(val));
+		if (!Set_GOB_Var(gob, var, val))
+			vTrap2(RE_BAD_FIELD_SET, var, Of_Type(val));
 	}
 }
 

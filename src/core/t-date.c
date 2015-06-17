@@ -320,7 +320,12 @@
 		day += (REBINT)Month_Length(month, year);
 	}
 
-	if (year < 0 || year > MAX_YEAR) Trap1(RE_TYPE_LIMIT, Get_Type(REB_DATE));
+	if (year < 0 || year > MAX_YEAR) {
+		Throw_Error(Make_Error(RE_TYPE_LIMIT, Get_Type(REB_DATE), 0, 0));
+		// Unreachable, but we want to make the compiler happy
+		assert(FALSE);
+		return dr;
+	}
 
 	dr.date.year = year;
 	dr.date.month = month+1;
@@ -381,7 +386,7 @@
 
 	diff  = Diff_Date(VAL_DATE(d1), VAL_DATE(d2));
 	if (sCAST(REBCNT, abs(diff)) > (((1U << 31) - 1) / SECS_IN_DAY))
-		Trap0(RE_OVERFLOW);
+		vTrap0(RE_OVERFLOW);
 
 	t1 = VAL_TIME(d1);
 	if (t1 == NO_TIME) t1 = 0L;

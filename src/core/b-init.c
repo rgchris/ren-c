@@ -58,7 +58,7 @@ extern const char Str_Banner[];
 	REBVAL val;
 
 	VAL_SET(&val, 123);
-	if (VAL_TYPE(&val) != 123) vCRASH(RP_REBVAL_ALIGNMENT);
+	if (VAL_TYPE(&val) != 123) vCrash(RP_REBVAL_ALIGNMENT);
 
 #ifdef WATCH_BOOT
 	printf("TYPE(123)=%d val=%d dat=%d gob=%d\n",
@@ -98,13 +98,13 @@ extern const char Str_Banner[];
 #endif
 
 	if (sizeof(void *) == 8) {
-		if (sizeof(REBVAL) != 32) vCRASH(RP_REBVAL_ALIGNMENT);
-		if (sizeof(REBGOB) != 84) vCRASH(RP_BAD_SIZE);
+		if (sizeof(REBVAL) != 32) vCrash(RP_REBVAL_ALIGNMENT);
+		if (sizeof(REBGOB) != 84) vCrash(RP_BAD_SIZE);
 	} else {
-		if (sizeof(REBVAL) != 16) vCRASH(RP_REBVAL_ALIGNMENT);
-		if (sizeof(REBGOB) != 64) vCRASH(RP_BAD_SIZE);
+		if (sizeof(REBVAL) != 16) vCrash(RP_REBVAL_ALIGNMENT);
+		if (sizeof(REBGOB) != 64) vCrash(RP_BAD_SIZE);
 	}
-	if (sizeof(REBDAT) != 4) vCRASH(RP_BAD_SIZE);
+	if (sizeof(REBDAT) != 4) vCrash(RP_BAD_SIZE);
 }
 
 
@@ -178,7 +178,7 @@ extern const char Str_Banner[];
 		spec.data = NULL; // !!! Should have used zlib calls directly!
 
 		if (!text || (STR_LEN(text) != NAT_UNCOMPRESSED_SIZE))
-			vCRASH(RP_BOOT_DATA);
+			vCrash(RP_BOOT_DATA);
 
 		boot = Scan_Source(STR_HEAD(text), NAT_UNCOMPRESSED_SIZE);
 		Free_Series(text);
@@ -189,10 +189,10 @@ extern const char Str_Banner[];
 	Boot_Block = rCAST(BOOT_BLK *, VAL_BLK(BLK_HEAD(boot)));
 
 	if (VAL_TAIL(&Boot_Block->types) != REB_MAX)
-		vCRASH(RP_BAD_BOOT_TYPE_BLOCK);
+		vCrash(RP_BAD_BOOT_TYPE_BLOCK);
 
 	if (VAL_WORD_SYM(VAL_BLK(&Boot_Block->types)) != SYM_END_TYPE)
-		vCRASH(RP_BAD_END_TYPE_WORD);
+		vCrash(RP_BAD_END_TYPE_WORD);
 
 	// Create low-level string pointers (used by RS_ constants):
 	{
@@ -211,13 +211,13 @@ extern const char Str_Banner[];
 	}
 
 	if (0 != strcmp("end!", AS_CCHARS(Get_Sym_Name(SYM_END_TYPE))))
-		vCRASH(RP_BAD_END_CANON_WORD);
+		vCrash(RP_BAD_END_CANON_WORD);
 
 	if (0 != strcmp("true", AS_CCHARS(Get_Sym_Name(SYM_TRUE))))
-		vCRASH(RP_BAD_TRUE_CANON_WORD);
+		vCrash(RP_BAD_TRUE_CANON_WORD);
 
 	if (0 != strcmp("line", BOOT_STR(RS_SCAN, 1)))
-		vCRASH(RP_BAD_BOOT_STRING);
+		vCrash(RP_BAD_BOOT_STRING);
 }
 
 
@@ -342,7 +342,7 @@ extern const char Str_Banner[];
 ***********************************************************************/
 {
 	Action_Count++;
-	if (Action_Count >= A_MAX_ACTION) CRASH(RP_ACTION_OVERFLOW);
+	if (Action_Count >= A_MAX_ACTION) Crash(RP_ACTION_OVERFLOW);
 	Make_Native(ds, VAL_SERIES(D_ARG(1)), (REBFUN)(REBUPT)Action_Count, REB_ACTION);
 	return R_RET;
 }
@@ -381,7 +381,7 @@ extern const char Str_Banner[];
 		val = Append_Frame(Lib_Context, word, 0);
 		// Find the related function:
 		func = Find_Word_Value(Lib_Context, VAL_WORD_SYM(word+1));
-		if (!func) vCRASH(RP_EARLY_ERROR);
+		if (!func) vCrash(RP_EARLY_ERROR);
 		*val = *func;
 		VAL_SET(val, REB_OP);
 		VAL_SET_EXT(val, VAL_TYPE(func));
@@ -407,7 +407,7 @@ extern const char Str_Banner[];
 	// native: native [spec [block!]]
 	word = VAL_BLK_SKIP(&Boot_Block->booters, 1);
 	if (!IS_SET_WORD(word) && VAL_WORD_SYM(word) != SYM_NATIVE)
-		vCRASH(RE_NATIVE_BOOT);
+		vCrash(RE_NATIVE_BOOT);
 
 	//val = BLK_SKIP(Sys_Context, SYS_CTX_NATIVE);
 	val = Append_Frame(Lib_Context, word, 0);
