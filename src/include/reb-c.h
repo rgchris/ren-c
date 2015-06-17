@@ -171,7 +171,7 @@
 	rCAST(t *, Make_Mem(sizeof(t) * (n)))
 
 #define ALLOC_ARRAY_ZEROFILL(t,n) \
-	rCAST(t *, memset(ALLOC_ARRAY(t, (n)), '\0', sizeof(t)))
+	rCAST(t *, memset(ALLOC_ARRAY(t, (n)), '\0', sizeof(t) * (n)))
 
 #if defined(__cplusplus) && __cplusplus >= 201103L
 	// In C++11, decltype lets us do a bit more sanity checking that the
@@ -182,7 +182,7 @@
 	#define FREE(t,p) \
 		do { \
 			static_assert( \
-				std::is_same<decltype(p), std::add_pointer<t>::type)::value, \
+				std::is_same<decltype(p), std::add_pointer<t>::type>::value, \
 				"mismatched FREE type" \
 			); \
 			Free_Mem(p, sizeof(t)); \
@@ -191,7 +191,7 @@
 	#define FREE_ARRAY(t,n,p)	\
 		do { \
 			static_assert( \
-				std::is_same<decltype(p), std::add_pointer<t>::type)::value, \
+				std::is_same<decltype(p), std::add_pointer<t>::type>::value, \
 				"mismatched FREE_ARRAY type" \
 			); \
 			Free_Mem(p, sizeof(t) * (n)); \
