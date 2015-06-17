@@ -200,10 +200,10 @@ static void No_Nones(REBVAL *arg) {
 	REBCNT index = VAL_INDEX(block);
 	REBCNT tail  = VAL_TAIL(block);
 	REBFLG only  = DS_REF(AN_ONLY);
-	REBINT rlen;  // length to be removed
-	REBINT ilen  = 1;  // length to be inserted
-	REBINT cnt   = 1;  // DUP count
-	REBINT size;
+	REBCNT rlen;  // length to be removed
+	REBCNT ilen  = 1;  // length to be inserted
+	REBCNT cnt   = 1;  // DUP count
+	REBCNT size;
 	REBFLG is_blk = FALSE; // arg is a block not a value
 
 	// Length of target (may modify index): (arg can be anything)
@@ -351,12 +351,13 @@ done:
 }
 
 // WARNING! Not re-entrant. !!!  Must find a way to push it on stack?
+// Fields initialized to zero due to global scope
 static struct {
 	REBFLG cased;
 	REBFLG reverse;
 	REBCNT offset;
 	REBVAL *compare;
-} sort_flags = {0};
+} sort_flags;
 
 /***********************************************************************
 **
@@ -531,7 +532,7 @@ static struct {
 /*
 ***********************************************************************/
 {
-	REBINT n = 0;
+	REBCNT n = 0;
 
 	/* Issues!!!
 		a/1.3
@@ -551,7 +552,7 @@ static struct {
 		n = Find_Block_Simple(VAL_SERIES(pvs->value), VAL_INDEX(pvs->value), pvs->select) + 1;
 	}
 
-	if (n < 0 || (REBCNT)n >= VAL_TAIL(pvs->value)) {
+	if ((n == NOT_FOUND) || n >= VAL_TAIL(pvs->value)) {
 		if (pvs->setval) return PE_BAD_SELECT;
 		return PE_NONE;
 	}

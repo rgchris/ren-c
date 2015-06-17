@@ -104,7 +104,7 @@
 		|| VAL_DAY(value) == 0
 		|| VAL_DAY(value) > 31
 	) {
-		Append_Bytes(mold->series, "?date?");
+		Append_Bytes(mold->series, AS_CBYTES("?date?"));
 		return;
 	}
 
@@ -159,7 +159,7 @@
 ***********************************************************************/
 {
 	if (month != 1)
-		return (REBCNT)Month_Lengths[month];
+		return Month_Lengths_USUALLY[month];
 
 	return (
 		((year % 4) == 0) &&		// divisible by four is a leap year
@@ -185,7 +185,7 @@
 
 	days = 0;
 
-	for (i = 0; i < (date.date.month-1); i++)
+	for (i = 0; i < sCAST(REBCNT, date.date.month - 1); i++)
 		days += Month_Length(i, date.date.year);
 
 	return date.date.day + days;
@@ -244,7 +244,8 @@
 **
 ***********************************************************************/
 {
-	REBDAT year1 = {0};
+	REBDAT year1;
+	memset(&year1, NUL, sizeof(year1));
 	year1.date.day = 1;
 	year1.date.month = 1;
 
@@ -254,7 +255,7 @@
 
 /***********************************************************************
 **
-*/	void Normalize_Time(REBI64 *sp, REBINT *dp)
+*/	void Normalize_Time(REBI64 *sp, REBCNT *dp)
 /*
 **		Adjust *dp by number of days and set secs to less than a day.
 **
@@ -379,7 +380,8 @@
 	REBI64 t2;
 
 	diff  = Diff_Date(VAL_DATE(d1), VAL_DATE(d2));
-	if (abs(diff) > (((1U << 31) - 1) / SECS_IN_DAY)) Trap0(RE_OVERFLOW);
+	if (sCAST(REBCNT, abs(diff)) > (((1U << 31) - 1) / SECS_IN_DAY))
+		Trap0(RE_OVERFLOW);
 
 	t1 = VAL_TIME(d1);
 	if (t1 == NO_TIME) t1 = 0L;
@@ -437,7 +439,8 @@
 
 	if (month < 1 || month > 12) return FALSE;
 
-	if (year > MAX_YEAR || day < 1 || day > (REBINT)(Month_Lengths[month-1])) return FALSE;
+	if (year > MAX_YEAR || day < 1 || day > Month_Lengths_USUALLY[month - 1])
+		return FALSE;
 
 	// Check February for leap year or century:
 	if (month == 2 && day == 29) {
@@ -488,7 +491,7 @@
 	REBI64 secs;
 	REBINT tz;
 	REBDAT date;
-	REBINT day, month, year;
+	REBCNT day, month, year;
 	REBINT num;
 	REBVAL dat;
 	REB_TIMEF time;
@@ -643,11 +646,11 @@
 			goto setDate;
 		case 9:
 			time.h = n;
-			secs = Join_Time(&time);
+			secs = Join_Time(&time, FALSE);
 			break;
 		case 10:
 			time.m = n;
-			secs = Join_Time(&time);
+			secs = Join_Time(&time, FALSE);
 			break;
 		case 11:
 			if (IS_INTEGER(val)) {
@@ -659,7 +662,7 @@
 				time.s = (REBINT)VAL_DECIMAL(val);
 				time.n = (REBINT)((VAL_DECIMAL(val) - time.s) * SEC_SEC);
 			}
-			secs = Join_Time(&time);
+			secs = Join_Time(&time, FALSE);
 			break;
 
 		default:
@@ -690,7 +693,7 @@ setDate:
 	REBI64	secs;
 	REBINT  tz;
 	REBDAT	date;
-	REBINT	day, month, year;
+	REBCNT	day, month, year;
 	REBVAL	*val;
 	REBVAL	*arg;
 	REBINT	num;

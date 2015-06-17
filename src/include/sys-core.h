@@ -33,10 +33,7 @@
 
 // Internal configuration:
 #define REB_DEF					// kernel definitions and structs
-#define ASSERTIONS				// special run-time checks
-//#define DEBUGGING				// debug output and debugger assistance
-//#define SERIES_LABELS			// enable identifier labels for series
-//#define MUNGWALL				// memory allocation bounds checking
+
 #define STACK_MIN   4000		// data stack increment size
 #define STACK_LIMIT 400000		// data stack max (6.4MB)
 #define MIN_COMMON 10000		// min size of common buffer
@@ -55,6 +52,29 @@
 #include <string.h>
 #include <setjmp.h>
 #include <math.h>
+
+// The standard C language assertion header is controlled by the conditional
+// NDEBUG for "(N)o (DEBUG)ging".  While negative logic is counter-intuitive
+// e.g. `#ifndef NDEBUG` vs. `#ifdef DEBUG`, it's what C uses...and is still
+// the least of evils:
+//
+//     http://stackoverflow.com/a/17241278/211160
+//
+// Note that when NDEBUG is true, the assert(...) macro is completely removed
+// from the compiled code.  Only use this form when checking a condition that
+// should not be able to happen.  If the check is very costly, consider
+// controlling it with an option as it is ideal if the debug build is usable
+// enough that people will voluntarily run it despite *some* slowdown...
+//
+// To raise errors to users without crashing, use TrapXXX() or Throw_Error().
+// See boot/errors.r for the list of the form some-error-name: that makes
+// RE_SOME_ERROR_NAME definitions you can use. 
+//
+// If a serious condition warranting termination is detected, use CRASH()
+// and add a RP_SOME_CRASH condition.  These values are not generated, so
+// you can modify them directly in the enumeration of the C file.
+
+#include <assert.h>
 
 // Special OS-specific definitions:
 #ifdef OS_DEFS
@@ -148,7 +168,7 @@ enum {
 	COPY_ALL,			// both deep, strings (3)
 //	COPY_IGNORE = 4,	// ignore tail position (used for stack args)
 	COPY_OBJECT = 8,	// copy an object
-	COPY_SAME = 16,
+	COPY_SAME = 16
 };
 
 #define CP_DEEP TYPESET(63)
@@ -172,14 +192,14 @@ enum {
 	BIND_GET = 8,		// Lookup :word and use its word value
 	BIND_NO_DUP = 16,	// Do not allow dups during word collection (for specs)
 	BIND_FUNC = 32,		// Recurse into functions.
-	BIND_NO_SELF = 64,	// Do not bind SELF (in closures)
+	BIND_NO_SELF = 64	// Do not bind SELF (in closures)
 };
 
 // Modes for Rebind_Block:
 enum {
 	REBIND_TYPE = 1,	// Change frame type when rebinding
 	REBIND_FUNC	= 2,	// Rebind function and closure bodies
-	REBIND_TABLE = 4,	// Use bind table when rebinding
+	REBIND_TABLE = 4	// Use bind table when rebinding
 };
 
 // Mold and form options:
@@ -195,6 +215,7 @@ enum REB_Mold_Opts {
 	MOPT_EMAIL,
 	MOPT_ONLY,			// Mold/only - no outer block []
 	MOPT_LINES,			// add a linefeed between each value
+	MOPT_MAX
 };
 
 #define GET_MOPT(v, f) GET_FLAG(v->opts, f)
@@ -215,6 +236,7 @@ enum Reb_Reflectors {
 	OF_VALUES,
 	OF_TYPES,
 	OF_TITLE,
+	OF_MAX
 };
 
 // Load option flags:
@@ -223,7 +245,8 @@ enum {
 	LOAD_HEADER,		// Converts header to object, checks values
 	LOAD_NEXT,			// Load next value
 	LOAD_NORMAL,		// Convert header, load script
-	LOAD_REQUIRE		// Header is required, else error
+	LOAD_REQUIRE,		// Header is required, else error
+	LOAD_MAX
 };
 
 // General constants:
@@ -243,13 +266,15 @@ enum Insert_Arg_Nums {
 	AN_LENGTH,
 	AN_ONLY,
 	AN_DUP,
-	AN_COUNT
+	AN_COUNT,
+	AN_MAX
 };
 
 enum rebol_signals {
 	SIG_RECYCLE,
 	SIG_ESCAPE,
 	SIG_EVENT_PORT,
+	SIG_MAX
 };
 
 // Security flags:
@@ -258,6 +283,7 @@ enum {
 	SEC_ASK,
 	SEC_THROW,
 	SEC_QUIT,
+	SEC_MAX
 };
 
 // Security policy byte offsets:
@@ -265,6 +291,7 @@ enum {
 	POL_READ,
 	POL_WRITE,
 	POL_EXEC,
+	POL_MAX
 };
 
 // Encoding options:
@@ -276,6 +303,7 @@ enum encoding_opts {
 	ENC_OPT_BOM,		// byte order marker
 	ENC_OPT_CRLF,		// CR line termination
 	ENC_OPT_NO_COPY,	// do not copy if ASCII
+	ENC_OPT_MAX
 };
 
 #define ENCF_NO_COPY (1<<ENC_OPT_NO_COPY)
@@ -294,20 +322,7 @@ enum encoding_opts {
 // Generic defines:
 #define NZ(c) ((c) != 0)
 
-#define FREE(m, s)  free(m)
 #define ALIGN(s, a) (((s) + (a)-1) & ~((a)-1))
-
-#define ALEVEL 2
-
-#define ASSERT(c,m) if (!(c)) Crash(m);		// (breakpoint in Crash() to see why)
-#if (ALEVEL>0)
-#define ASSERT1(c,m) if (!(c)) Crash(m);	// Not in beta releases
-#if (ALEVEL>1)
-#define ASSERT2(c,m) if (!(c)) Crash(m);	// Not in any releases
-#endif
-#endif
-#define MEM_CARE 5				// Lower number for more frequent checks
-
 
 #define LOOP(n) for (; n > 0; n--)
 #define	FOREACH(n, limit) for (n = 0; n < limit; n++)
@@ -328,7 +343,69 @@ enum encoding_opts {
 //#define DO_BLOCK(v) Do_Block(VAL_SERIES(v), VAL_INDEX(v))
 #define DO_BLK(v) Do_Blk(VAL_SERIES(v), VAL_INDEX(v))
 
-#define DEAD_END	return 0	// makes compiler happy (for never used return case)
+// When warnings are turned up high, compilers notice when you have a path
+// through code that doesn't return a value (or in C++, doesn't return OR
+// doesn't throw an exception).  Rebol uses the tricky setjmp/longjmp to
+// do a non-local goto that can pop out of a function, so these macros
+// can keep the compiler happy by showing a code path where you meant to
+// not return.
+//
+// These will assert in debug builds, to identify the file and line number
+// of the DEAD_END that somehow managed to execute (even though it never
+// should).  Otherwise it comes in two versions...one that returns a 0
+// (which can turn into pointer or many value types in C), and a _V version
+// that returns a (V)oid.
+//
+// NOTE: Technically speaking, in very tight micro-optimization situations
+// you are better off not generating any instructions for a code path you
+// *know* will never run...and even a return "has cost".  By and large it
+// is negligible, so either use DEAD_END or find a way to make your code
+// not trigger the compiler warning if you're in a *very* tight optimization.
+
+#define DEAD_END \
+	do { \
+		assert(FALSE); \
+		return 0; \
+	} while (0)
+
+#define DEAD_END_V \
+	do { \
+		assert(FALSE); \
+		return; \
+	} while (0)
+
+// Trigger an assertion failure that uniquely indicates the error's origin
+// in debug builds, while crashing in debug builds and also indicating a
+// "dead end".  Has a CRASH_V variant returning void match DEAD_END_V
+
+#define CRASH(rp) \
+	do { \
+		assert(0 == (rp)); /* fail here in Debug build */ \
+		Crash_Core(rp); \
+		DEAD_END; \
+	} while (0)
+
+#define CRASH1(rp, a) \
+	do { \
+		assert(0 == (rp)); /* fail here in Debug build */ \
+		Crash_Core((rp), (a)); \
+		DEAD_END; \
+	} while (0)
+
+#define CRASH_V(rp) \
+	do { \
+		assert(0 == (rp)); /* fail here in Debug build */ \
+		Crash_Core(rp); \
+		DEAD_END_V; \
+	} while (0)
+
+#define CRASH1_V(rp, a) \
+	do { \
+		assert(0 == (rp)); /* fail here in Debug build */ \
+		Crash_Core((rp), (a)); \
+		DEAD_END_V; \
+	} while (0)
+
 
 #define	NO_RESULT	((REBCNT)(-1))
 #define	ALL_BITS	((REBCNT)(-1))
@@ -338,7 +415,10 @@ enum encoding_opts {
 #define	ALL_64		((REBU64)0xffffffffffffffffL)
 #endif
 
-#define BOOT_STR(c,i) PG_Boot_Strs[(c)+(i)]
+// !!! Boot strings are passed to several debug and output routines that
+// assume their data is *not* UCS-2.
+#define BOOT_STR(c,i) \
+	cCAST(const char *, AS_CHARS(PG_Boot_Strs[(c)+(i)]))
 
 //-- Temporary Buffers
 //   These are reused for cases for appending, when length cannot be known.
@@ -358,18 +438,25 @@ enum encoding_opts {
 
 // Save/Unsave Macros:
 #define	SAVE_SERIES(s)		Save_Series(s)
-#ifdef ASSERTIONS
-#define	UNSAVE_SERIES(s)	GC_Protect->tail--;\
-	ASSERT(((REBSER **)GC_Protect->data)[GC_Protect->tail] == s, RP_HOLD_SERIES_MALIGN)
+
+#define UNSAVE_SERIES(s) \
+	do { \
+		GC_Protect->tail--; \
+		assert(rCAST(REBSER **, GC_Protect->data)[GC_Protect->tail] == s); \
+	} while (0)
+
+#ifdef NDEBUG
+	#define CHECK_STACK(v) ((void)0)
 #else
-#define	UNSAVE_SERIES(s)	GC_Protect->tail--
+	#ifdef OS_STACK_GROWS_UP
+		#define CHECK_STACK(v) \
+			if (rCAST(REBUPT, v) >= Stack_Limit) Trap_Stack();
+	#else
+		#define CHECK_STACK(v) \
+			if (rCAST(REBUPT, v) <= Stack_Limit) Trap_Stack();
+	#endif
 #endif
 
-#ifdef OS_STACK_GROWS_UP
-#define CHECK_STACK(v) if ((REBUPT)(v) >= Stack_Limit) Trap_Stack();
-#else
-#define CHECK_STACK(v) if ((REBUPT)(v) <= Stack_Limit) Trap_Stack();
-#endif
 #define STACK_BOUNDS (4*1024*1000) // note: need a better way to set it !!
 // Also: made somewhat smaller than linker setting to allow trapping it
 

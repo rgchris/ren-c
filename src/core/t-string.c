@@ -406,7 +406,7 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 ***********************************************************************/
 {
 	REBSER *ser;
-	REB_MOLD mo = {0};
+	REB_MOLD mo;
 	REBCNT n;
 	REBUNI c;
 	REBSER *arg;
@@ -422,7 +422,7 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 	if (ANY_STR(pvs->select))
 		arg = VAL_SERIES(pvs->select);
 	else {
-		Reset_Mold(&mo);
+		Reset_Mold(&mo, 0);
 		Mold_Value(&mo, pvs->select, 0);
 		arg = mo.series;
 	}
@@ -665,11 +665,17 @@ zero_str:
 		args = Find_Refines(ds, ALL_TRIM_REFS);
 		if (
 			(args & (AM_TRIM_ALL | AM_TRIM_WITH)) &&
-			(args & (AM_TRIM_HEAD | AM_TRIM_TAIL | AM_TRIM_LINES | AM_TRIM_AUTO)) ||
+			(args & (AM_TRIM_HEAD | AM_TRIM_TAIL | AM_TRIM_LINES | AM_TRIM_AUTO))
+		) {
+			Trap0(RE_BAD_REFINES);
+		}
+
+		if (
 			(args & AM_TRIM_AUTO) && 
 			(args & (AM_TRIM_HEAD | AM_TRIM_TAIL | AM_TRIM_LINES | AM_TRIM_ALL | AM_TRIM_WITH))
-		)
+		) {
 			Trap0(RE_BAD_REFINES);
+		}
 
 		Trim_String(VAL_SERIES(value), VAL_INDEX(value), VAL_LEN(value), args, D_ARG(ARG_TRIM_STR));
 		break;

@@ -333,7 +333,7 @@
 	REBINT ret;
 
 	action = Value_Dispatch[type];
-	//ASSERT2(action != 0, RP_NO_ACTION);
+	assert(action != 0);
 	if (!action) Trap_Action(type, act);
 	ret = action(ds, act);
 	if (ret > 0) {
@@ -384,7 +384,7 @@
 
 	Eval_Natives++;
 
-	ASSERT1(type < REB_MAX, RP_BAD_TYPE_ACTION);
+	if (type >= REB_MAX) CRASH_V(RP_BAD_TYPE_ACTION);
 
 	// Handle special datatype test cases (eg. integer?)
 	if (VAL_FUNC_ACT(func) == 0) {

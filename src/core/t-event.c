@@ -112,7 +112,8 @@
 	case SYM_GOB:
 		if (IS_GOB(val)) {
 			VAL_EVENT_MODEL(value) = EVM_GUI;
-			VAL_EVENT_SER(value) = VAL_GOB(val);
+			// !!! Bad reinterpret_cast, should be a union!
+			VAL_EVENT_SER(value) = rCAST(REBSER *, VAL_GOB(val));
 			break;
 		}
 		return FALSE; 
@@ -233,7 +234,8 @@
 	case SYM_GOB:
 		if (IS_EVENT_MODEL(value, EVM_GUI)) {
 			if (VAL_EVENT_SER(value)) {
-				SET_GOB(val, VAL_EVENT_SER(value));
+				// !!! Bad reinterpret_cast, should be a union
+				SET_GOB(val, rCAST(REBGOB *, VAL_EVENT_SER(value)));
 				break;
 			}
 		}
@@ -293,10 +295,14 @@
 		// Event holds a file string:
 		if (VAL_EVENT_TYPE(value) != EVT_DROP_FILE) goto is_none;
 		if (!GET_FLAG(VAL_EVENT_FLAGS(value), EVF_COPIED)) {
-			void *str = VAL_EVENT_SER(value);
+			// !!! Bad reinterpret cast, should be a union...
+			// !!! Is it supposed to be an OS string, e.g. REBCHR?  If so
+			// there is a problem here because it's using Copy_Bytes which
+			// is Latin8 only...
+			REBYTE *str = rCAST(REBYTE *, VAL_EVENT_SER(value));
 			VAL_EVENT_SER(value) = Copy_Bytes(str, -1);
 			SET_FLAG(VAL_EVENT_FLAGS(value), EVF_COPIED);
-			OS_FREE(str);
+			OS_FREE_MEM(str);
 		}
 		Set_Series(REB_FILE, val, VAL_EVENT_SER(value));
 		break;
@@ -320,7 +326,7 @@ is_none:
 ***********************************************************************/
 {
 	if (IS_BLOCK(data)) {
-		CLEARS(out);
+		memset(out, NUL, sizeof(*out)); // !!! Necessary?
 		Set_Event_Vars(out, VAL_BLK_DATA(data));
 		VAL_SET(out, REB_EVENT);
 		return TRUE;
@@ -368,7 +374,7 @@ is_none:
 			if (IS_EVENT(arg)) return R_ARG2;
 			//Trap_Make(REB_EVENT, value);
 			VAL_SET(D_RET, REB_EVENT);
-			CLEARS(&(D_RET->data.event));
+			memset(&D_RET->data.event, NUL, sizeof(D_RET->data.event));
 		}
 		else
 is_arg_error:
@@ -520,7 +526,7 @@ enum rebol_event_fields {
 		if (!IS_NONE(&val)) {
 			New_Indented_Line(mold);
 			Append_UTF8(mold->series, Get_Sym_Name(fields[field]), -1);
-			Append_Bytes(mold->series, ": ");
+			Append_Bytes(mold->series, AS_CBYTES(": "));
 			if (IS_WORD(&val)) Append_Byte(mold->series, '\'');
 			Mold_Value(mold, &val, TRUE);
 		}

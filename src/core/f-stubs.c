@@ -36,7 +36,7 @@
 /*
 ***********************************************************************/
 {
-	ASSERT(sizeof(REBCNT) == 4, RP_BAD_SIZE);
+	assert(sizeof(REBCNT) == 4);
 	out[0] = (REBYTE) in;
 	out[1] = (REBYTE)(in >> 8);
 	out[2] = (REBYTE)(in >> 16);
@@ -49,7 +49,7 @@
 /*
 ***********************************************************************/
 {
-	ASSERT(sizeof(REBCNT) == 4, RP_BAD_SIZE);
+	assert(sizeof(REBCNT) == 4);
 	return (REBCNT) in[0]          // & 0xFF
 		| (REBCNT)  in[1] <<  8    // & 0xFF00;
 		| (REBCNT)  in[2] << 16    // & 0xFF0000;
@@ -289,7 +289,7 @@
 **
 ***********************************************************************/
 {
-	ASSERT(index < SERIES_TAIL(Lib_Context), RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(Lib_Context)) CRASH(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(Lib_Context) + index + 1;
 }
 
@@ -339,7 +339,7 @@
 **
 ***********************************************************************/
 {
-	ASSERT1(index < SERIES_TAIL(obj), RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
 	return Get_Sym_Name(FRM_WORD_SYM(obj, index));
 }
 
@@ -352,7 +352,7 @@
 **
 ***********************************************************************/
 {
-	ASSERT1(index < SERIES_TAIL(obj), RP_BAD_OBJ_INDEX);
+	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(obj) + index;
 }
 
@@ -366,8 +366,8 @@
 ***********************************************************************/
 {
 	REBSER *obj = VAL_OBJ_FRAME(objval);
-	ASSERT1(IS_FRAME(BLK_HEAD(obj)), RP_BAD_OBJ_FRAME);
-	ASSERT1(index < SERIES_TAIL(obj), RP_BAD_OBJ_INDEX);
+	assert(IS_FRAME(BLK_HEAD(obj)));
+	if (index >= SERIES_TAIL(obj)) CRASH(RP_BAD_OBJ_INDEX);
 	return FRM_VALUES(obj) + index;
 }
 
@@ -410,7 +410,7 @@
 
 	obj = VAL_OBJ_VALUES(ROOT_SYSTEM) + i1;
 	if (!i2) return obj;
-	ASSERT1(IS_OBJECT(obj), RP_BAD_OBJ_INDEX);
+	if (!IS_OBJECT(obj)) CRASH(RP_BAD_OBJ_INDEX);
 	return Get_Field(VAL_OBJ_FRAME(obj), i2);
 }
 
@@ -822,8 +822,8 @@
 {
 	long t, *a, *b;
 
-	a = m1;
-	b = m2;
+	a = rCAST(long *, m1);
+	b = rCAST(long *, m2);
 	len /= sizeof(long);
 	while (len--) {
 		t = *b;
@@ -869,7 +869,7 @@
 	REBCHR str[100];
 
 	OS_FORM_ERROR(0, str, 100);
-	Set_String(DS_RETURN, Copy_OS_Str(str, LEN_STR(str)));
+	Set_String(DS_RETURN, Copy_OS_Str(str, LEN_OS_STR(str)));
 	return DS_RETURN;
 }
 

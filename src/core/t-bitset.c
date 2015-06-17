@@ -31,7 +31,7 @@
 
 #define MAX_BITSET 0x7fffffff
 
-#define BITS_NOT(s) ((s)->size)
+#define BITS_NOT(s) ((s)->extra.size)
 
 /***********************************************************************
 **
@@ -79,7 +79,7 @@
 {
 	REBSER *ser = VAL_SERIES(value);
 
-	if (BITS_NOT(ser)) Append_Bytes(mold->series, "[not bits ");
+	if (BITS_NOT(ser)) Append_Bytes(mold->series, AS_CBYTES("[not bits "));
 	Mold_Binary(value, mold);
 	if (BITS_NOT(ser)) Append_Byte(mold->series, ']');
 }
@@ -252,7 +252,7 @@ retry:
 	if (i >= tail) {
 		if (!set) return; // no need to expand
 		Expand_Series(bset, tail, (i - tail) + 1);
-		CLEAR(BIN_SKIP(bset, tail), (i - tail) + 1);
+		memset(BIN_SKIP(bset, tail), NUL, (i - tail) + 1);
 	}
 
 	bit = 1 << (7 - ((n) & 7));
@@ -371,8 +371,8 @@ span_bits:
 			n = VAL_LEN(val);
 			c = bset->tail;
 			if (n >= c) {
-				Expand_Series(bset, c, (n - c));
-				CLEAR(BIN_SKIP(bset, c), (n - c));
+				Expand_Series(bset, c, n - c);
+				memset(BIN_SKIP(bset, c), NUL, n - c);
 			}
 			memcpy(BIN_HEAD(bset), VAL_BIN_DATA(val), n);
 			break;

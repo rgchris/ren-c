@@ -339,7 +339,10 @@ void Trace_Arg(REBINT num, REBVAL *arg, REBVAL *path)
 	// Save WORD for function and fake frame for relative arg lookup:
 	tos++;
 	VAL_SET(tos, REB_HANDLE); // Was REB_WORD, but GC does not like bad fields.
-	VAL_WORD_SYM(tos) = word ? word : SYM__APPLY_;
+	if (word)
+		VAL_WORD_SYM(tos) = word;
+	else
+		VAL_WORD_SYM(tos) = SYM__APPLY_;
 	VAL_WORD_INDEX(tos) = -1; // avoid GC access to invalid FRAME above
 	if (func) {
 		VAL_WORD_FRAME(tos) = VAL_FUNC_ARGS(func);
@@ -964,7 +967,7 @@ eval_func2:
 
 	default:
 		//Debug_Fmt("Bad eval: %d %s", VAL_TYPE(value), Get_Type_Name(value));
-		Crash(RP_BAD_EVALTYPE, VAL_TYPE(value));
+		CRASH1(RP_BAD_EVALTYPE, VAL_TYPE(value));
 		//return -index;
 	}
 
@@ -989,14 +992,11 @@ eval_func2:
 ***********************************************************************/
 {
 	REBVAL *tos = 0;
-#if (ALEVEL>1)
 	REBINT start = DSP;
-//	REBCNT gcd = GC_Disabled;
-#endif
 
 	CHECK_MEMORY(4); // Be sure we don't go far with a problem.
 
-	ASSERT1(block->info, RP_GC_OF_BLOCK);
+	assert(block->info);
 
 	while (index < BLK_LEN(block)) {
 		index = Do_Next(block, index, 0);
@@ -1008,11 +1008,6 @@ eval_func2:
 
 	if (start != DSP || tos != &DS_Base[start+1]) Trap0(RE_MISSING_ARG);
 
-//	ASSERT2(gcd == GC_Disabled, RP_GC_STUCK);
-
-	// Restore data stack and return value:
-//	ASSERT2((tos == 0 || (start == DSP && tos == &DS_Base[start+1])), RP_TOS_DRIFT);
-//	if (!tos) {tos = DS_NEXT; SET_UNSET(tos);}
 	return tos;
 }
 
@@ -1684,7 +1679,7 @@ eval_func2:
 	// Saved_State is safe.
 	Saved_State = Halt_State;
 
-	code = Scan_Source(text, LEN_BYTES(text));
+	code = Scan_Source(text, strlen(AS_CHARS(text)));
 	SAVE_SERIES(code);
 
 	// Bind into lib or user spaces?
@@ -1834,7 +1829,7 @@ eval_func2:
 				break;
 
 			default:
-				ASSERT1(FALSE, RP_ASSERTS);
+				CRASH_V(RP_MISC);
 		}
 push_arg:
 		DS_PUSH(DSF_ARGS(DSF, isrc));
@@ -2062,7 +2057,7 @@ x*/	REBVAL *Do_Path(REBVAL **ppath, REBSER *block, REBCNT *index)
 		if (ANY_FUNC(value)) break;	// evaluate
 	}
 
-	//ASSERT(DSF == dsf);
+	//assert(DSF == dsf);
 	DSP = DSF;
 	DSF = VAL_BACK(DS_NEXT);
 

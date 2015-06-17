@@ -202,8 +202,8 @@
 	bodi = VAL_INDEX(D_ARG(mode+2));
 
 	// Starting location when past end with negative skip:
-	if (inc < 0 && VAL_INDEX(var) >= (REBINT)VAL_TAIL(var)) {
-		VAL_INDEX(var) = (REBINT)VAL_TAIL(var) + inc;
+	if (inc < 0 && VAL_INDEX(var) >= VAL_TAIL(var)) {
+		VAL_INDEX(var) = VAL_TAIL(var) + inc;
 	}
 
 	// NOTE: This math only works for index in positive ranges!
@@ -211,11 +211,11 @@
 	if (ANY_SERIES(var)) {
 		while (TRUE) {
 			dat = VAL_SERIES(var);
-			idx = (REBINT)VAL_INDEX(var);
+			idx = VAL_INDEX(var);
 			if (idx < 0) break;
-			if (idx >= (REBINT)SERIES_TAIL(dat)) {
+			if (idx >= sCAST(REBINT, SERIES_TAIL(dat))) {
 				if (inc >= 0) break;
-				idx = (REBINT)SERIES_TAIL(dat) + inc; // negative
+				idx = SERIES_TAIL(dat) + inc; // negative
 				if (idx < 0) break;
 				VAL_INDEX(var) = idx;
 			}
@@ -484,7 +484,10 @@ skip_hidden: ;
 	else if (ANY_SERIES(start)) {
 		// Check that start and end are same type and series:
 		//if (ANY_SERIES(end) && VAL_SERIES(start) != VAL_SERIES(end)) Trap_Arg(end);
-		Loop_Series(var, body, start, ANY_SERIES(end) ? VAL_INDEX(end) : (Int32s(end, 1) - 1), Int32(incr));
+		if (ANY_SERIES(end))
+			Loop_Series(var, body, start, VAL_INDEX(end), Int32(incr));
+		else
+			Loop_Series(var, body, start, Int32s(end, 1) - 1, Int32(incr));
 	}
 	else
 		Loop_Number(var, body, start, end, incr);

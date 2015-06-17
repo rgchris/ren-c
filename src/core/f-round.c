@@ -99,7 +99,8 @@ enum {
 	/* is scale negligible? */
 	if (scale < ldexp(fabs(dec), -53)) return dec;
 
-	if (v = scale >= 1.0) dec = dec / scale;
+	v = scale >= 1.0;
+	if (v) dec = dec / scale;
 	else {
 		r = frexp(scale, &e);
 		if (e <= -1022) {
@@ -139,21 +140,30 @@ enum {
 }
 
 #define Int_Abs(x) ((x) < 0) ? -(x) : (x)
-#define Int_Trunc num = (num > 0) ? n - r : -(REBI64)(n - r)
-#define Int_Floor	{\
-    					if (num > 0) num = n - r;\
-						else if ((m = n + s) <= (REBU64)1 << 63) num = -(REBI64)m;\
-						else Trap0(RE_OVERFLOW);\
-					}
-#define Int_Ceil	{\
-						if (num < 0) num = -(REBI64)(n - r);\
-	        			else if ((m = n + s) < (REBU64)1 << 63) num = m;\
-	        			else Trap0(RE_OVERFLOW);\
-					}
-#define Int_Away	if ((m = n + s) >= (REBU64)1 << 63)\
-						if (num < 0 && m == (REBU64) 1 << 63) num = m;\
-		    			else Trap0(RE_OVERFLOW);\
-					else num = (num > 0) ? m : -(REBI64)m
+
+#define Int_Trunc \
+	num = (num > 0) ? sCAST(REBI64, n - r) : -sCAST(REBI64, n - r)
+
+#define Int_Floor \
+	{ \
+		if (num > 0) num = n - r; \
+		else if ((m = n + s) <= (REBU64)1 << 63) num = -(REBI64)m; \
+		else Trap0(RE_OVERFLOW); \
+	}
+
+#define Int_Ceil \
+	{ \
+		if (num < 0) num = -sCAST(REBI64, n - r); \
+		else if ((m = n + s) < sCAST(REBU64, 1) << 63) num = m; \
+		else Trap0(RE_OVERFLOW); \
+	}
+
+#define Int_Away \
+	if ((m = n + s) >= sCAST(REBU64, 1) << 63) \
+		if (num < 0 && m == sCAST(REBU64, 1) << 63) num = m; \
+		else Trap0(RE_OVERFLOW); \
+	else num = (num > 0) ? sCAST(REBI64, m) : -sCAST(REBI64, m)
+
 
 /***********************************************************************
 **

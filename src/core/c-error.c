@@ -122,7 +122,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 **
 ***********************************************************************/
 {
-	if (IS_NONE(TASK_THIS_ERROR)) Crash(RP_ERROR_CATCH);
+	if (IS_NONE(TASK_THIS_ERROR)) CRASH_V(RP_ERROR_CATCH);
 	*value = *TASK_THIS_ERROR;
 //	Print("CE: %r", value);
 	SET_NONE(TASK_THIS_ERROR);
@@ -138,7 +138,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 **
 ***********************************************************************/
 {
-	if (!Saved_State) Crash(RP_NO_SAVED_STATE);
+	if (!Saved_State) CRASH_V(RP_NO_SAVED_STATE);
 	SET_ERROR(TASK_THIS_ERROR, ERR_NUM(err), err);
 	if (Trace_Level) Trace_Error(TASK_THIS_ERROR);
 	longjmp(*Saved_State, 1);
@@ -154,7 +154,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 **
 ***********************************************************************/
 {
-	if (!Saved_State) Crash(RP_NO_SAVED_STATE);
+	if (!Saved_State) CRASH_V(RP_NO_SAVED_STATE);
 	*TASK_THIS_ERROR = *val;
 	longjmp(*Saved_State, 1);
 }
@@ -212,7 +212,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 {
 	if (IS_INTEGER(TASK_THIS_ERROR)) return; // composing prior error.
 
-	if (!Saved_State) Crash(RP_NO_SAVED_STATE);
+	if (!Saved_State) CRASH_V(RP_NO_SAVED_STATE);
 
 	*TASK_THIS_ERROR = *TASK_STACK_ERROR; // pre-allocated
 
@@ -280,7 +280,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 	n = code / 100 + 1;
 	cats = VAL_OBJ_FRAME(Get_System(SYS_CATALOG, CAT_ERRORS));
 
-	if (code >= 0 && n < SERIES_TAIL(cats) &&
+	if (n < SERIES_TAIL(cats) &&
 		NZ(cat = VAL_SERIES(BLK_SKIP(cats, n)))
 	) {
 		Set_Word(&error->type, FRM_WORD_SYM(cats, n), cats, n);
@@ -420,7 +420,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 	REBSER *err;		// Error object
 	ERROR_OBJ *error;	// Error object values
 
-	if (PG_Boot_Phase < BOOT_ERRORS) Crash(RP_EARLY_ERROR, code); // Not far enough!
+	if (PG_Boot_Phase < BOOT_ERRORS) CRASH1(RP_EARLY_ERROR, code);
 
 	// Make a copy of the error object template:
 	err = CLONE_OBJECT(VAL_OBJ_FRAME(ROOT_ERROBJ));
@@ -695,7 +695,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 		DSP++; // Room for return value
 		Catch_Error(DS_TOP); // Stores error value here
 		Print_Value(DS_TOP, 0, FALSE);
-		Crash(RP_NO_CATCH);
+		CRASH_V(RP_NO_CATCH);
 	}
 	SET_STATE(Top_State, Saved_State);
 }

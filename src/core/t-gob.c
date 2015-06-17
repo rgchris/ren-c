@@ -64,8 +64,8 @@ const REBCNT Gob_Flag_Words[] = {
 **
 ***********************************************************************/
 {
-	REBGOB *gob = Make_Node(GOB_POOL);
-	CLEAR(gob, sizeof(REBGOB));
+	REBGOB *gob = rCAST(REBGOB *, Make_Node(GOB_POOL));
+	memset(gob, NUL, sizeof(*gob));
 	GOB_W(gob) = 100;
 	GOB_H(gob) = 100;
 	USE_GOB(gob);
@@ -146,7 +146,7 @@ const REBCNT Gob_Flag_Words[] = {
 ***********************************************************************/
 {
 	REBGOB *par;
-	REBINT i;
+	REBCNT i;
 
 	par = GOB_PARENT(gob);
 	if (par && GOB_PANE(par) && (i = Find_Gob(par, gob)) != NOT_FOUND) {
@@ -422,7 +422,7 @@ const REBCNT Gob_Flag_Words[] = {
 		}
 		else if (IS_INTEGER(val)) {
 			SET_GOB_DTYPE(gob, GOBD_INTEGER);
-			SET_GOB_DATA(gob, (void*)(REBIPT)VAL_INT64(val));
+			SET_GOB_DATA(gob, rCAST(REBSER *, sCAST(REBIPT, VAL_INT64(val))));
 		}
 		else if (IS_NONE(val))
 			SET_GOB_TYPE(gob, GOBT_NONE);
@@ -815,7 +815,7 @@ is_none:
 	case A_TAKE:
 		len = D_REF(2) ? Get_Num_Arg(D_ARG(3)) : 1;
 		if (index + len > tail) len = tail - index;
-		if (index < 0 || index >= tail) goto is_none;
+		if (index >= tail) goto is_none;
 		if (!D_REF(2)) { // just one value
 			VAL_SET(val, REB_GOB);
 			VAL_GOB(val) = *GOB_SKIP(gob, index);

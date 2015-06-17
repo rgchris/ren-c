@@ -45,6 +45,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+
+// Does not include host-lib for some reason, and redefines a lot of
+// basics.  Going with that for this file, for now...
+
+#if why_no_host_lib
+	#include "reb-host.h"
+	#include "host-lib.h"
+	#include "rebol-lib.h"
+#endif
+
+#ifdef __cplusplus
+	#define sCAST(t, v) static_cast<t>(v)
+	#define rCAST(t, v) reinterpret_cast<t>(v)
+	#define cCAST(t, v) const_cast<t>(v)
+#else
+	#define sCAST(t, v) ((t)(v))
+	#define rCAST(t, v) ((t)(v))
+	#define cCAST(t, v) ((t)(v))
+#endif
 
 //#define TEST_MODE  // teset as stand-alone program
 
@@ -65,7 +85,7 @@ enum {
 	LF  =  10,
 	CR  =  13,
 	ESC =  27,
-	DEL = 127,
+	DEL = 127
 };
 
 // Configuration:
@@ -74,7 +94,7 @@ enum {
 #define MAX_HISTORY  300	// number of lines stored
 
 // Macros: (does not use reb-c.h)
-#define MAKE_STR(l) (char*)malloc(l)
+#define MAKE_OS_STR(l) (char*)malloc(l)
 #define WRITE_CHAR(s)    write(1, s, 1)
 #define WRITE_CHARS(s,l) write(1, s, l)
 #define WRITE_STR(s)     write(1, s, strlen(s))
@@ -135,15 +155,16 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 #endif
 
 	// Setup variables:
-	Line_History = (char**)malloc((MAX_HISTORY+2) * sizeof(char*));
-	Line_History[0] = "";
+	Line_History = rCAST(char **, malloc((MAX_HISTORY+2) * sizeof(char*)));
+	Line_History[0] = rCAST(char *, malloc(strlen("") + 1));
+	strcpy(Line_History[0], "");
 	Line_Count = 1;
 
-	term = malloc(sizeof(*term));
-	memset(term, 0, sizeof(*term));
-	term->buffer = MAKE_STR(TERM_BUF_LEN);
+	term = rCAST(STD_TERM *, malloc(sizeof(*term)));
+	memset(term, '\0', sizeof(*term));
+	term->buffer = MAKE_OS_STR(TERM_BUF_LEN);
 	term->buffer[0] = 0;
-	term->residue = MAKE_STR(TERM_BUF_LEN);
+	term->residue = MAKE_OS_STR(TERM_BUF_LEN);
 	term->residue[0] = 0;
 
 	Term_Init = TRUE;
@@ -154,7 +175,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 
 /***********************************************************************
 **
-*/	void Quit_Terminal(STD_TERM *term)
+*/	void Quit_Terminal(void *term_opaque)
 /*
 **		Restore the terminal modes original entry settings,
 **		in preparation for exit from program.
@@ -162,6 +183,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 ***********************************************************************/
 {
 	int n;
+	STD_TERM *term = rCAST(STD_TERM *, term_opaque);
 
 	if (Term_Init) {
 #ifndef NO_TTY_ATTRIBUTES
@@ -170,7 +192,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 		free(term->residue);
 		free(term->buffer);
 		free(term);
-		for (n = 1; n < Line_Count; n++) free(Line_History[n]);
+		for (n = 0; n < Line_Count; n++) free(Line_History[n]);
 		free(Line_History);
 	}
 
@@ -204,7 +226,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 ***********************************************************************/
 {
 	term->buffer[term->end] = 0;
-	term->out = MAKE_STR(term->end + 1);
+	term->out = MAKE_OS_STR(term->end + 1);
 	strcpy(term->out, term->buffer);
 
 	// If max history, drop older lines (but not [0] empty line):
@@ -578,7 +600,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 
 /***********************************************************************
 **
-*/	int Read_Line(STD_TERM *term, char *result, int limit)
+*/	int Read_Line(void *term_opaque, char *result, int limit)
 /*
 **		Read a line (as a sequence of bytes) from the terminal.
 **		Handles line editing and line history recall.
@@ -586,6 +608,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 **
 ***********************************************************************/
 {
+	STD_TERM *term = rCAST(STD_TERM *, term_opaque);
 	char buf[READ_BUF_LEN];
 	char *cp;
 	int len;		// length of IO read

@@ -37,6 +37,7 @@ enum {
 	PROT_DEEP,
 	PROT_HIDE,
 	PROT_WORD,
+	PROT_MAX
 };
 
 
@@ -376,7 +377,7 @@ enum {
 			else if (VAL_ERR_NUM(ret) == RE_HALT)
 				Halt_Code(RE_HALT, 0);
 			else
-				Crash(RP_NO_CATCH);
+				CRASH(RP_NO_CATCH);
 			*DS_RETURN = *ret;
 			return R_RET;
 		}

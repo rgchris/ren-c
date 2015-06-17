@@ -53,7 +53,7 @@
 	REBVAL *val2 = D_ARG(2);
 	REBI64 num;
 	REBI64 arg;
-	REBINT n;
+	REBCNT n;
 
 	REBU64 p, a, b; // for overflow detection
 	REBCNT a1, a0, b1, b0;
@@ -235,7 +235,7 @@
 			REBYTE *bp;
 			REBCNT len;
 			bp = Get_Word_Name(val);
-			len = strlen(bp);
+			len = strlen(AS_CHARS(bp));
 			n = MIN(MAX_HEX_LEN, len);
 			if (Scan_Hex(bp, &num, n, n) == 0) goto is_bad;
 		}

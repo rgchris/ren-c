@@ -219,7 +219,7 @@
 
 	// Reuse a global word list block because length of block cannot
 	// be known until all words are scanned. Then copy this block.
-	if (SERIES_TAIL(BUF_WORDS)) Crash(RP_WORD_LIST); // still in use
+	if (SERIES_TAIL(BUF_WORDS)) CRASH_V(RP_WORD_LIST); // still in use
 
 	// Add the SELF word to slot zero.
 	if ((modes = (modes & BIND_NO_SELF)?0:SYM_SELF))
@@ -402,7 +402,7 @@
 	REBINT *binds = WORDS_HEAD(Bind_Table); // GC safe to do here
 	CHECK_BIND_TABLE;
 
-	if (SERIES_TAIL(BUF_WORDS)) Crash(RP_WORD_LIST); // still in use
+	if (SERIES_TAIL(BUF_WORDS)) CRASH(RP_WORD_LIST); // still in use
 
 	if (prior)
 		Collect_Simple_Words(prior, BIND_ALL);
@@ -817,7 +817,7 @@
 			// Is the word found in this frame?
 			if (NZ(n = binds[VAL_WORD_CANON(value)])) {
 				if (n == NO_RESULT) n = 0; // SELF word
-				ASSERT1(n < SERIES_TAIL(frame), RP_BIND_BOUNDS);
+				assert(n < SERIES_TAIL(frame));
 				// Word is in frame, bind it:
 				VAL_WORD_INDEX(value) = n;
 				VAL_WORD_FRAME(value) = frame;
@@ -1282,8 +1282,7 @@
 
 	if (!HAS_FRAME(word)) Trap1(RE_NOT_DEFINED, word);
 
-//	ASSERT(index, RP_BAD_SET_INDEX);
-	ASSERT(VAL_WORD_FRAME(word), RP_BAD_SET_CONTEXT);
+	assert(VAL_WORD_FRAME(word));
 //  Print("Set %s to %s [frame: %x idx: %d]", Get_Word_Name(word), Get_Type_Name(value), VAL_WORD_FRAME(word), VAL_WORD_INDEX(word));
 
 	if (index > 0) {
@@ -1327,23 +1326,6 @@
 
 /***********************************************************************
 **
-*/	void Set_Var_Basic(REBVAL *var, REBCNT type, ...)
-/*
-**		A commonly used helper function to set a variable
-**		to a basic value.
-**
-***********************************************************************/
-{
-	REBVAL value = {0};
-
-	VAL_SET(&value, type);
-
-	Set_Var(var, &value);
-}
-
-
-/***********************************************************************
-**
 */	REBVAL *Obj_Word(REBVAL *value, REBCNT index)
 /*
 **		Return pointer to the nth WORD of an object.
@@ -1377,8 +1359,7 @@
 /*
 ***********************************************************************/
 {
-	ASSERT(frame, RP_BAD_SET_CONTEXT);
-	CLEARS(value);
+	assert(frame);
 	SET_OBJECT(value, frame);
 }
 

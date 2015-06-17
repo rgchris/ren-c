@@ -84,7 +84,19 @@
 
 	switch (action) {
 	case A_LENGTHQ:
-		diff = LEN_BYTES(Get_Sym_Name(VAL_WORD_SYM(val)));
+		// !!! WRONG ANSWER !!! Just try:
+		// 
+		//     	s: "^(FF)" 
+		//		word: to-word s 
+		//		probe s 
+		//		probe length? word
+		//
+		// Found via type checking.  The right answer is probably to lose the
+		// feature as it's not empirically clear that there's "one good answer"
+		// regarding whether you want the colon counted in a SET-WORD!...and
+		// taking LENGTH? of a symbol seems like an error.  Red doesn't do it.
+
+		diff = strlen(AS_CHARS(Get_Sym_Name(VAL_WORD_SYM(val))));
 		if (type != REB_WORD) diff++;
 		DS_Ret_Int(diff);
 		break;
@@ -92,7 +104,7 @@
 	case A_MAKE:
 	case A_TO:
 		// TO word! ...
-		if (type == REB_DATATYPE) type = (REBCNT)VAL_DATATYPE(val);
+		if (type == REB_DATATYPE) type = VAL_DATATYPE(val);
 		if (ANY_WORD(arg)) {
 			VAL_SET(arg, type);
 			return R_ARG2;

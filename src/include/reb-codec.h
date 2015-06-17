@@ -51,11 +51,11 @@ typedef struct reb_codec_image {
 	int h;
 	int len;
 	int alpha;
-	unsigned char *data;
+	unsigned char *data; // !!! Why unsigned, when char* is lingua ANSI?
 	union {
 		u32 *bits;
 		void *other;
-	};
+	} extra;
 	int error;
 } REBCDI;
 
@@ -70,13 +70,15 @@ enum {
 	CODI_IMAGE,
 	CODI_SOUND,
 	CODI_BLOCK,
+	CODI_MAX
 };
 
 // Codec commands:
 enum {
-	CODI_IDENTIFY,
-	CODI_DECODE,
-	CODI_ENCODE,
+	CODI_ACT_IDENTIFY,
+	CODI_ACT_DECODE,
+	CODI_ACT_ENCODE,
+	CODI_ACT_MAX
 };
 
 // Codec errors:
@@ -88,4 +90,5 @@ enum {
 	CODI_ERR_BIT_LEN,		// Bit length is not supported
 	CODI_ERR_BAD_TABLE,		// Image tables are wrong
 	CODI_ERR_BAD_DATA,		// Generic
+	CODI_ERR_MAX
 };
