@@ -534,7 +534,7 @@ SCHEME_ACTIONS *Scheme_Actions;	// Initial Global (not threaded)
 	REBINT n;
 
 	for (n = 0; n < MAX_SCHEMES && Scheme_Actions[n].sym; n++);
-	if (n >= MAX_SCHEMES) CRASH_V(RP_MAX_SCHEMES);
+	if (n >= MAX_SCHEMES) vCRASH(RP_MAX_SCHEMES);
 
 	Scheme_Actions[n].sym = sym;
 	Scheme_Actions[n].map = map;

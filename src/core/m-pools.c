@@ -236,7 +236,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	REBCNT	mem_size = pool->wide * units + sizeof(REBSEG);
 
 	seg = rCAST(REBSEG *, Make_Mem(mem_size));
-	if (!seg) CRASH1_V(RP_NO_MEMORY, mem_size);
+	if (!seg) vCRASH1(RP_NO_MEMORY, mem_size);
 
 	memset(seg, NUL, mem_size);  // needed to clear series nodes
 	seg->size = mem_size;

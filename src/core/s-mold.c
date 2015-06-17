@@ -649,7 +649,7 @@ static void Mold_Block(REBVAL *value, REB_MOLD *mold)
 
 	if (SERIES_WIDE(VAL_SERIES(value)) == 0) {
 		Crash_Core(RP_BAD_WIDTH, sizeof(REBVAL), 0, VAL_TYPE(value));
-		DEAD_END_V;
+		vDEAD_END;
 	}
 
 	// Optimize when no index needed:
@@ -1269,7 +1269,7 @@ static void Mold_Error(REBVAL *value, REB_MOLD *mold, REBFLG molded)
 		break;
 
 	default:
-		CRASH1_V(RP_DATATYPE + 5, VAL_TYPE(value));
+		vCRASH1(RP_DATATYPE + 5, VAL_TYPE(value));
 	}
 	return;
 
@@ -1372,7 +1372,7 @@ append:
 	memset(mold, NUL, sizeof(*mold));
 	mold->opts = opts;
 
-	if (!buf) CRASH_V(RP_NO_BUFFER);
+	if (!buf) vCRASH(RP_NO_BUFFER);
 
 	if (SERIES_REST(buf) > MAX_COMMON)
 		Shrink_Series(buf, MIN_COMMON);

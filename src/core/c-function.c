@@ -318,6 +318,8 @@
 		case R_ARG3:
 			*ds = *D_ARG(3);
 			break;
+		default:
+			vCRASH(RP_MISC);
 		}
 	}
 }
@@ -368,6 +370,8 @@
 		case R_ARG3:
 			*ds = *D_ARG(3);
 			break;
+		default:
+			vCRASH(RP_MISC);
 		}
 	}
 }
@@ -384,7 +388,7 @@
 
 	Eval_Natives++;
 
-	if (type >= REB_MAX) CRASH_V(RP_BAD_TYPE_ACTION);
+	if (type >= REB_MAX) vCRASH(RP_BAD_TYPE_ACTION);
 
 	// Handle special datatype test cases (eg. integer?)
 	if (VAL_FUNC_ACT(func) == 0) {

@@ -55,7 +55,7 @@ static REBREQ *Req_SIO;
 {
 	//OS_CALL_DEVICE(RDI_STDIO, RDC_INIT);
 	Req_SIO = OS_ALLOC_DEVREQ(RDI_STDIO);
-	if (!Req_SIO) CRASH_V(RP_IO_ERROR);
+	if (!Req_SIO) vCRASH(RP_IO_ERROR);
 
 	// The device is already open, so this call will just setup
 	// the request fields properly.
@@ -79,7 +79,7 @@ static REBREQ *Req_SIO;
 
 	OS_DO_DEVICE(Req_SIO, RDC_WRITE);
 
-	if (Req_SIO->error) CRASH_V(RP_IO_ERROR);
+	if (Req_SIO->error) vCRASH(RP_IO_ERROR);
 }
 
 
@@ -100,7 +100,7 @@ static REBREQ *Req_SIO;
 	REBCNT len2;
 	REBUNI *up = (REBUNI*)bp;
 
-	if (!bp) CRASH_V(RP_NO_PRINT_PTR);
+	if (!bp) vCRASH(RP_NO_PRINT_PTR);
 
 	// Determine length if not provided:
 	if (len == UNKNOWN) len = uni ? Strlen_Uni(up) : strlen(AS_CCHARS(bp));
@@ -125,7 +125,7 @@ static REBREQ *Req_SIO;
 		len -= n;
 
 		OS_DO_DEVICE(Req_SIO, RDC_WRITE);
-		if (Req_SIO->error) CRASH_V(RP_IO_ERROR);
+		if (Req_SIO->error) vCRASH(RP_IO_ERROR);
 	}
 }
 
@@ -436,7 +436,7 @@ static REBREQ *Req_SIO;
 	REBYTE *bp;
 	REBCNT tail;
 
-	if (!buf) CRASH_V(RP_NO_BUFFER);
+	if (!buf) vCRASH(RP_NO_BUFFER);
 
 	RESET_SERIES(buf);
 

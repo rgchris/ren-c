@@ -91,7 +91,7 @@
 	// Do we need to expand the current series allocation?
 	// WARNING: Do not use ">=" below or newser size may be the same!
 	if ((size + extra) > SERIES_SPACE(series)) {
-		if (IS_LOCK_SERIES(series)) CRASH_V(RP_LOCKED_SERIES);
+		if (IS_LOCK_SERIES(series)) vCRASH(RP_LOCKED_SERIES);
 		//DISABLE_GC; // Don't let GC occur just for an expansion.
 
 		if (Reb_Opts->watch_expand) {
@@ -154,7 +154,7 @@
 
 	if ((SERIES_TAIL(series) + SERIES_BIAS(series)) * wide >= SERIES_TOTAL(series)) {
 		Dump_Series(series, "Overflow");
-		CRASH_V(RP_OVER_SERIES);
+		vCRASH(RP_OVER_SERIES);
 	}
 
 	CHECK_MEMORY(3);

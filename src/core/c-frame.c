@@ -219,7 +219,7 @@
 
 	// Reuse a global word list block because length of block cannot
 	// be known until all words are scanned. Then copy this block.
-	if (SERIES_TAIL(BUF_WORDS)) CRASH_V(RP_WORD_LIST); // still in use
+	if (SERIES_TAIL(BUF_WORDS)) vCRASH(RP_WORD_LIST); // still in use
 
 	// Add the SELF word to slot zero.
 	if ((modes = (modes & BIND_NO_SELF)?0:SYM_SELF))

@@ -368,7 +368,7 @@ enum encoding_opts {
 		return 0; \
 	} while (0)
 
-#define DEAD_END_V \
+#define vDEAD_END \
 	do { \
 		assert(FALSE); \
 		return; \
@@ -392,18 +392,18 @@ enum encoding_opts {
 		DEAD_END; \
 	} while (0)
 
-#define CRASH_V(rp) \
+#define vCRASH(rp) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core(rp); \
-		DEAD_END_V; \
+		vDEAD_END; \
 	} while (0)
 
-#define CRASH1_V(rp, a) \
+#define vCRASH1(rp, a) \
 	do { \
 		assert(0 == (rp)); /* fail here in Debug build */ \
 		Crash_Core((rp), (a)); \
-		DEAD_END_V; \
+		vDEAD_END; \
 	} while (0)
 
 

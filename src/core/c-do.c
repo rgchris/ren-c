@@ -1829,7 +1829,7 @@ eval_func2:
 				break;
 
 			default:
-				CRASH_V(RP_MISC);
+				vCRASH(RP_MISC);
 		}
 push_arg:
 		DS_PUSH(DSF_ARGS(DSF, isrc));
