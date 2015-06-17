@@ -72,7 +72,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Date(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Date(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -395,7 +395,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Cmp_Date(REBVAL *d1, REBVAL *d2)
+*/	REBINT Cmp_Date(const REBVAL *d1, const REBVAL *d2)
 /*
 ***********************************************************************/
 {
@@ -410,7 +410,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG MT_Date(REBVAL *val, REBVAL *arg, REBCNT type)
+*/	REBFLG MT_Date(REBVAL *val, const REBVAL *arg, REBCNT type)
 /*
 **		Given a block of values, construct a date datatype.
 **
@@ -774,7 +774,7 @@ setDate:
 				goto ret_val;
 			}
 			if (IS_STRING(arg)) {
-				REBYTE *bp;
+				const REBYTE *bp;
 				REBCNT len;
 				// 30-September-10000/12:34:56.123456789AM/12:34
 				bp = Qualify_String(arg, 45, &len, FALSE); // can trap, ret diff str

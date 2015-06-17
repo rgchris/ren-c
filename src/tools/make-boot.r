@@ -332,7 +332,7 @@ foreach :type-record boot-types [
 		word? typeclass
 		not find types-used typeclass
 	][
-		emit-line/up1/decl "extern REBFLG MT_" typeclass "(REBVAL *, REBVAL *, REBCNT);"
+		emit-line/up1/decl "extern REBFLG MT_" typeclass "(REBVAL *, const REBVAL *, REBCNT);"
 		append types-used typeclass
 	]
 ]
@@ -377,7 +377,7 @@ foreach :type-record boot-types [
 		word? typeclass
 		not find types-used typeclass
 	][
-		emit-line/up1/decl "extern REBINT CT_" typeclass "(REBVAL *, REBVAL *, REBINT);"
+		emit-line/up1/decl "extern REBINT CT_" typeclass "(const REBVAL *, const REBVAL *, REBINT);"
 		append types-used typeclass
 	]
 ]

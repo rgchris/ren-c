@@ -47,7 +47,7 @@ const REBCNT Gob_Flag_Words[] = {
 
 /***********************************************************************
 **
-*/	REBINT CT_Gob(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Gob(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -76,7 +76,7 @@ const REBCNT Gob_Flag_Words[] = {
 
 /***********************************************************************
 **
-*/  REBINT Cmp_Gob(REBVAL *g1, REBVAL *g2)
+*/  REBINT Cmp_Gob(const REBVAL *g1, const REBVAL *g2)
 /*
 ***********************************************************************/
 {
@@ -639,7 +639,7 @@ is_none:
 
 /***********************************************************************
 **
-*/	REBFLG MT_Gob(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Gob(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {

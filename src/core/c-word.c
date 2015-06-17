@@ -331,29 +331,29 @@ make_sym:
 
 /***********************************************************************
 **
-*/	REBYTE *Get_Sym_Name(REBCNT num)
+*/	const REBYTE *Get_Sym_Name(REBCNT num)
 /*
 ***********************************************************************/
 {
-	if (num == 0 || num >= PG_Word_Table.series->tail) return (REBYTE*)"???";
+	if (num == 0 || num >= PG_Word_Table.series->tail) return AS_CBYTES("???");
 	return VAL_SYM_NAME(BLK_SKIP(PG_Word_Table.series, num));
 }
 
 
 /***********************************************************************
 **
-*/	REBYTE *Get_Word_Name(REBVAL *value)
+*/	const REBYTE *Get_Word_Name(const REBVAL *value)
 /*
 ***********************************************************************/
 {
 	if (value) return Get_Sym_Name(VAL_WORD_SYM(value));
-	return (REBYTE*)"(unnamed)";
+	return AS_CBYTES("(unnamed)");
 }
 
 
 /***********************************************************************
 **
-*/	REBYTE *Get_Type_Name(REBVAL *value)
+*/	const REBYTE *Get_Type_Name(const REBVAL *value)
 /*
 ***********************************************************************/
 {
@@ -363,7 +363,7 @@ make_sym:
 
 /***********************************************************************
 **
-*/	REBINT Compare_Word(REBVAL *s, REBVAL *t, REBFLG is_case)
+*/	REBINT Compare_Word(const REBVAL *s, const REBVAL *t, REBFLG is_case)
 /*
 **		Compare the names of two words and return the difference.
 **		Note that words are kept UTF8 encoded.

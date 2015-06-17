@@ -32,7 +32,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Char(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Char(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {

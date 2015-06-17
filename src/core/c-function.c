@@ -176,7 +176,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG Make_Function(REBCNT type, REBVAL *value, REBVAL *def)
+*/	REBFLG Make_Function(REBCNT type, REBVAL *value, const REBVAL *def)
 /*
 ***********************************************************************/
 {

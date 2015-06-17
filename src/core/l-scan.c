@@ -1636,7 +1636,7 @@ exit_block:
 
 /***********************************************************************
 **
-*/  REBCNT Scan_Word(REBYTE *cp, REBCNT len)
+*/  REBCNT Scan_Word(const REBYTE *cp, REBCNT len)
 /*
 **		Scan word chars and make word symbol for it.
 **		This method gets exactly the same results as scanner.

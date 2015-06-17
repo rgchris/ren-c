@@ -37,7 +37,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Event(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Event(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -49,7 +49,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Cmp_Event(REBVAL *t1, REBVAL *t2)
+*/	REBINT Cmp_Event(const REBVAL *t1, const REBVAL *t2)
 /*
 **	Given two events, compare them.
 **
@@ -321,7 +321,7 @@ is_none:
 
 /***********************************************************************
 **
-*/	REBFLG MT_Event(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Event(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {

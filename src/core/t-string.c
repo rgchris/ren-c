@@ -33,7 +33,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_String(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_String(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -272,7 +272,7 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 
 /***********************************************************************
 **
-*/	REBFLG MT_String(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_String(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -294,7 +294,8 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 /*
 ***********************************************************************/
 {
-	return ((int)*(REBYTE*)v1) - ((int)*(REBYTE*)v2);
+	return sCAST(int, *rCAST(const REBYTE *, v1))
+		- sCAST(int, *rCAST(const REBYTE *, v2));
 }
 
 
@@ -304,7 +305,8 @@ static REBSER *make_binary(REBVAL *arg, REBOOL make)
 /*
 ***********************************************************************/
 {
-	return ((int)*(REBYTE*)v2) - ((int)*(REBYTE*)v1);
+	return sCAST(int, *rCAST(const REBYTE *, v2))
+		- sCAST(int, *rCAST(const REBYTE *, v1));
 }
 
 

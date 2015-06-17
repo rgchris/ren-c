@@ -33,7 +33,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Money(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Money(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -110,7 +110,7 @@
 {
 	REBVAL *val = D_ARG(1);
 	REBVAL *arg;
-	REBYTE *str;
+	const REBYTE *str;
 	REBINT equal = 1;
 
 	if (IS_BINARY_ACT(action)) {

@@ -58,7 +58,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Map(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Map(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -340,7 +340,7 @@
 
 /***********************************************************************
 **
-*/	static void Append_Map(REBSER *ser, REBVAL *arg, REBCNT len)
+*/	static void Append_Map(REBSER *ser, const REBVAL *arg, REBCNT len)
 /*
 ***********************************************************************/
 {
@@ -356,7 +356,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG MT_Map(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Map(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {

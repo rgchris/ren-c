@@ -40,7 +40,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Image(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Image(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -56,7 +56,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG MT_Image(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Image(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -275,7 +275,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG Valid_Tuples(REBVAL *blk)
+*/	REBFLG Valid_Tuples(const REBVAL *blk)
 /*
 ***********************************************************************/
 {
@@ -441,7 +441,7 @@ REBCNT ARGB_To_BGR(REBCNT i)
 
 /***********************************************************************
 **
-*/	REBVAL *Create_Image(REBVAL *block, REBVAL *val, REBCNT modes)
+*/	REBVAL *Create_Image(const REBVAL *block, REBVAL *val, REBCNT modes)
 /*
 **	Create an image value from components block [pair rgb alpha].
 **

@@ -35,7 +35,7 @@
 #define	MAX_QUOTED_STR	50	// max length of "string" before going to { }
 
 //typedef REBSER *(*MOLD_FUNC)(REBVAL *, REBSER *, REBCNT);
-typedef void (*MOLD_FUNC)(REBVAL *, REB_MOLD *);
+typedef void (*MOLD_FUNC)(const REBVAL *, REB_MOLD *);
 
 //const REBYTE New_Line[4] = {LF, 0};
 

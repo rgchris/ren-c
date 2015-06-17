@@ -35,7 +35,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Bitset(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Bitset(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -87,7 +87,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG MT_Bitset(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Bitset(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -112,7 +112,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Find_Max_Bit(REBVAL *val)
+*/	REBINT Find_Max_Bit(const REBVAL *val)
 /*
 **		Return integer number for the maximum bit number defined by
 **		the value. Used to determine how much space to allocate.
@@ -265,7 +265,7 @@ retry:
 
 /***********************************************************************
 **
-*/	void Set_Bit_Str(REBSER *bset, REBVAL *val, REBOOL set)
+*/	void Set_Bit_Str(REBSER *bset, const REBVAL *val, REBOOL set)
 /*
 ***********************************************************************/
 {
@@ -286,7 +286,7 @@ retry:
 
 /***********************************************************************
 **
-*/	REBFLG Set_Bits(REBSER *bset, REBVAL *val, REBOOL set)
+*/	REBFLG Set_Bits(REBSER *bset, const REBVAL *val, REBOOL set)
 /*
 **		Set/clear bits indicated by strings and chars and ranges.
 **

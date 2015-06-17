@@ -37,7 +37,7 @@ static	REBCNT	Native_Count;
 static	REBCNT	Native_Limit;
 static	REBCNT	Action_Count;
 static	REBCNT	Action_Marker;
-static	REBFUN  *Native_Functions;
+static	const REBFUN  *Native_Functions;
 static	BOOT_BLK *Boot_Block;
 
 extern const char Str_Banner[];
@@ -264,7 +264,7 @@ extern const char Str_Banner[];
 
 	for (word++; NOT_END(word); word++, n++) {
 		// !!! Assumes Latin-8 encoding for types!
-		strncpy(str, AS_CHARS(Get_Word_Name(word)), 32);
+		strncpy(str, AS_CCHARS(Get_Word_Name(word)), 32);
 		str[strlen(str) - 1] = '?';
 		sym = Make_Word(AS_BYTES(str), 0);
 		//Print("sym: %s", Get_Sym_Name(sym));
@@ -308,7 +308,7 @@ extern const char Str_Banner[];
 
 /***********************************************************************
 **
-*/	void Use_Natives(REBFUN *funcs, REBCNT limit)
+*/	void Use_Natives(const REBFUN *funcs, REBCNT limit)
 /*
 **		Setup to use NATIVE function. If limit == 0, then the
 **		native function table will be zero terminated (N_native).
@@ -401,7 +401,7 @@ extern const char Str_Banner[];
 	REBVAL *val;
 
 	Action_Count = 0;
-	Use_Natives((REBFUN *)Native_Funcs, MAX_NATS);
+	Use_Natives(Native_Funcs, MAX_NATS);
 
 	// Construct the first native, which is the NATIVE function creator itself:
 	// native: native [spec [block!]]
@@ -737,8 +737,8 @@ extern const char Str_Banner[];
 /*
 ***********************************************************************/
 {
-	Register_Codec((REBYTE*)"text", Codec_Text);
-	Register_Codec((REBYTE*)"markup", Codec_Markup);
+	Register_Codec(AS_CBYTES("text"), Codec_Text);
+	Register_Codec(AS_CBYTES("markup"), Codec_Markup);
 	Init_BMP_Codec();
 	Init_GIF_Codec();
 	Init_PNG_Codec();

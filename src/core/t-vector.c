@@ -156,7 +156,7 @@ void set_vect(REBCNT bits, REBYTE *data, REBCNT n, REBI64 i, REBDEC f) {
 }
 
 
-void Set_Vector_Row(REBSER *ser, REBVAL *blk)
+void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 {
 	REBCNT idx = VAL_INDEX(blk);
 	REBCNT len = VAL_LEN(blk);
@@ -224,7 +224,7 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 
 /***********************************************************************
 **
-*/	REBINT Compare_Vector(REBVAL *v1, REBVAL *v2)
+*/	REBINT Compare_Vector(const REBVAL *v1, const REBVAL *v2)
 /*
 ***********************************************************************/
 {
@@ -337,7 +337,7 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 
 /***********************************************************************
 **
-*/	REBVAL *Make_Vector_Spec(REBVAL *bp, REBVAL *value)
+*/	REBVAL *Make_Vector_Spec(const REBVAL *bp, REBVAL *value)
 /*
 **	Make a vector from a block spec.
 **
@@ -360,7 +360,7 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 	REBINT bits = 32;
 	REBCNT size = 1;
 	REBSER *vect;
-	REBVAL *iblk = 0;
+	const REBVAL *iblk = 0;
 
 	// UNSIGNED
 	if (IS_WORD(bp) && VAL_WORD_CANON(bp) == SYM_UNSIGNED) { 
@@ -434,7 +434,7 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 
 /***********************************************************************
 **
-*/	REBFLG MT_Vector(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Vector(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -445,7 +445,7 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 
 /***********************************************************************
 **
-*/	REBINT CT_Vector(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Vector(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -505,7 +505,13 @@ void Set_Vector_Row(REBSER *ser, REBVAL *blk)
 
 	if (IS_INTEGER(pvs->setval)) {
 		i = VAL_INT64(pvs->setval);
-		if (bits > VTUI64) f = (REBDEC)(i);
+		if (bits > VTUI64) f = sCAST(REBDEC, i);
+		else {
+			// !!! REVIEW: f was not set in this case; compiler caught the
+			// unused parameter.  So fill with distinctive garbage to make it
+			// easier to search for if it ever is.
+			f = -646.699; 
+		}
 	}
 	else if (IS_DECIMAL(pvs->setval)) {
 		f = VAL_DECIMAL(pvs->setval);

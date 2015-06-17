@@ -63,7 +63,7 @@
 
 /*********************************************************************
 **
-*/	REBYTE *Qualify_String(REBVAL *val, REBINT max_len, REBCNT *length, REBINT opts)
+*/	const REBYTE *Qualify_String(const REBVAL *val, REBINT max_len, REBCNT *length, REBINT opts)
 /*
 **	Prequalifies a string before using it with a function that
 **	expects it to be 8-bits.
@@ -713,9 +713,9 @@ static REBYTE seed_str[SEED_LEN] = {
 	if (VAL_BYTE_SIZE(val)) {
 		REBYTE *bp = VAL_BIN(val);
 		if (upper)
-			for (; n < len; n++) bp[n] = (REBYTE)UP_CASE(bp[n]);
+			for (; n < len; n++) bp[n] = sCAST(REBYTE, UP_CASE(bp[n]));
 		else {
-			for (; n < len; n++) bp[n] = (REBYTE)LO_CASE(bp[n]);
+			for (; n < len; n++) bp[n] = sCAST(REBYTE, LO_CASE(bp[n]));
 		}
 	} else {
 		REBUNI *up = VAL_UNI(val);

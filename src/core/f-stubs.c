@@ -116,7 +116,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Int32(REBVAL *val)
+*/	REBINT Int32(const REBVAL *val)
 /*
 ***********************************************************************/
 {
@@ -138,7 +138,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Int32s(REBVAL *val, REBINT sign)
+*/	REBINT Int32s(const REBVAL *val, REBINT sign)
 /*
 **		Get integer as positive, negative 32 bit value.
 **		Sign field can be
@@ -296,7 +296,7 @@
 
 /***********************************************************************
 **
-*/  REBVAL *Of_Type(REBVAL *value)
+*/  REBVAL *Of_Type(const REBVAL *value)
 /*
 **      Returns the datatype value for the given value.
 **		The datatypes are all at the head of the context.
@@ -333,7 +333,7 @@
 
 /***********************************************************************
 **
-*/  REBYTE *Get_Field_Name(REBSER *obj, REBCNT index)
+*/  const REBYTE *Get_Field_Name(REBSER *obj, REBCNT index)
 /*
 **      Get the name of a field of an object.
 **
@@ -557,7 +557,7 @@
 
 /***********************************************************************
 **
-*/	REBCNT Val_Series_Len(REBVAL *value)
+*/	REBCNT Val_Series_Len(const REBVAL *value)
 /*
 **		Get length of series, but avoid negative values.
 **

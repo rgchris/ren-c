@@ -30,7 +30,7 @@
 #include "sys-core.h"
 
 
-static REBOOL Same_Object(REBVAL *val, REBVAL *arg)
+static REBOOL Same_Object(const REBVAL *val, const REBVAL *arg)
 {
 	if (
 		VAL_TYPE(arg) == VAL_TYPE(val) &&
@@ -41,7 +41,7 @@ static REBOOL Same_Object(REBVAL *val, REBVAL *arg)
 }
 
 
-static REBOOL Equal_Object(REBVAL *val, REBVAL *arg)
+static REBOOL Equal_Object(const REBVAL *val, const REBVAL *arg)
 {
 	REBSER *f1;
 	REBSER *f2;
@@ -70,10 +70,11 @@ static REBOOL Equal_Object(REBVAL *val, REBVAL *arg)
 	return TRUE;
 }
 
-static void Append_Obj(REBSER *obj, REBVAL *arg)
+static void Append_Obj(REBSER *obj, const REBVAL *arg)
 {
 	REBCNT i, len;
-	REBVAL *word, *val;
+	const REBVAL *word;
+	REBVAL *val;
 	REBINT *binds; // for binding table
 
 	// Can be a word:
@@ -196,7 +197,7 @@ static REBSER *Trim_Object(REBSER *obj)
 
 /***********************************************************************
 **
-*/	REBINT CT_Object(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Object(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -208,7 +209,7 @@ static REBSER *Trim_Object(REBSER *obj)
 
 /***********************************************************************
 **
-*/	REBINT CT_Frame(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Frame(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -220,7 +221,7 @@ static REBSER *Trim_Object(REBSER *obj)
 
 /***********************************************************************
 **
-*/	REBFLG MT_Object(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Object(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {

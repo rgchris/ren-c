@@ -32,7 +32,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Block(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Block(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -56,7 +56,7 @@ static void No_Nones(REBVAL *arg) {
 
 /***********************************************************************
 **
-*/	REBFLG MT_Block(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Block(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -368,9 +368,17 @@ static struct {
 	// !!!! BE SURE that 64 bit large difference comparisons work
 
 	if (sort_flags.reverse)
-		return Cmp_Value((REBVAL*)v2+sort_flags.offset, (REBVAL*)v1+sort_flags.offset, sort_flags.cased);
+		return Cmp_Value(
+			rCAST(const REBVAL *, v2) + sort_flags.offset,
+			rCAST(const REBVAL *, v1) + sort_flags.offset,
+			sort_flags.cased
+		);
 	else
-		return Cmp_Value((REBVAL*)v1+sort_flags.offset, (REBVAL*)v2+sort_flags.offset, sort_flags.cased);
+		return Cmp_Value(
+			rCAST(const REBVAL *, v1) + sort_flags.offset,
+			rCAST(const REBVAL *, v2) + sort_flags.offset,
+			sort_flags.cased
+		);
 
 /*
 	REBI64 n = VAL_INT64((REBVAL*)v1) - VAL_INT64((REBVAL*)v2);

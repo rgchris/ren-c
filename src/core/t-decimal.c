@@ -113,7 +113,7 @@ REBOOL almost_equal(REBDEC a, REBDEC b, REBCNT max_diff) {
 
 /***********************************************************************
 **
-*/  REBFLG MT_Decimal(REBVAL *out, REBVAL *data, REBCNT type)
+*/  REBFLG MT_Decimal(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -168,7 +168,7 @@ REBOOL almost_equal(REBDEC a, REBDEC b, REBCNT max_diff) {
 
 /***********************************************************************
 **
-*/	REBINT CT_Decimal(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Decimal(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -364,7 +364,7 @@ REBOOL almost_equal(REBDEC a, REBDEC b, REBCNT max_diff) {
 
 			case REB_STRING:
 			{
-				REBYTE *bp;
+				const REBYTE *bp;
 				REBCNT len;
 				bp = Qualify_String(val, 24, &len, FALSE);
 				if (Scan_Decimal(bp, len, D_RET, type != REB_PERCENT)) {

@@ -163,7 +163,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Time(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Time(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -176,7 +176,7 @@
 
 /***********************************************************************
 **
-*/  REBI64 Make_Time(REBVAL *val)
+*/  REBI64 Make_Time(const REBVAL *val_orig)
 /*
 **		Returns NO_TIME if error.
 **
@@ -184,11 +184,19 @@
 {
 	REBI64 secs = 0;
 
+	// !!! Isn't supposed to mutate the input value.  We make a copy, but
+	// don't make a copy of any series or otherwise.
+
+	REBVAL val_copy;
+	REBVAL *val = &val_copy;
+
+	*val = *val_orig;
+
 	if (IS_TIME(val)) {
 		secs = VAL_TIME(val);
 	}
 	else if (IS_STRING(val)) {
-		REBYTE *bp;
+		const REBYTE *bp;
 		REBCNT len;
 		bp = Qualify_String(val, 30, &len, FALSE); // can trap, ret diff str
 		if (!Scan_Time(bp, len, val)) goto no_time;
@@ -247,7 +255,7 @@
 
 /***********************************************************************
 **
-*/	REBFLG MT_Time(REBVAL *out, REBVAL *data, REBCNT type)
+*/	REBFLG MT_Time(REBVAL *out, const REBVAL *data, REBCNT type)
 /*
 ***********************************************************************/
 {
@@ -265,7 +273,7 @@
 
 /***********************************************************************
 **
-*/	REBINT Cmp_Time(REBVAL *v1, REBVAL *v2)
+*/	REBINT Cmp_Time(const REBVAL *v1, const REBVAL *v2)
 /*
 **	Given two times, compare them.
 **

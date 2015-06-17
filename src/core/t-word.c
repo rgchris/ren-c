@@ -46,7 +46,7 @@
 
 /***********************************************************************
 **
-*/	REBINT CT_Word(REBVAL *a, REBVAL *b, REBINT mode)
+*/	REBINT CT_Word(const REBVAL *a, const REBVAL *b, REBINT mode)
 /*
 ***********************************************************************/
 {
@@ -96,7 +96,7 @@
 		// regarding whether you want the colon counted in a SET-WORD!...and
 		// taking LENGTH? of a symbol seems like an error.  Red doesn't do it.
 
-		diff = strlen(AS_CHARS(Get_Sym_Name(VAL_WORD_SYM(val))));
+		diff = strlen(AS_CCHARS(Get_Sym_Name(VAL_WORD_SYM(val))));
 		if (type != REB_WORD) diff++;
 		DS_Ret_Int(diff);
 		break;
@@ -111,7 +111,7 @@
 		}
 		else {
 			if (IS_STRING(arg)) {
-				REBYTE *bp;
+				const REBYTE *bp;
 				REBCNT len;
 				// Set sym. Rest is set below.
 				bp = Qualify_String(arg, 255, &len, TRUE);

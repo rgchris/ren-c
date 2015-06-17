@@ -33,13 +33,13 @@
 #include "sys-dec-to-char.h"
 #include <errno.h>
 
-typedef REBFLG (*MAKE_FUNC)(REBVAL *, REBVAL *, REBCNT);
+typedef REBFLG (*MAKE_FUNC)(REBVAL *, const REBVAL *, REBCNT);
 #include "tmp-maketypes.h"
 
 
 /***********************************************************************
 **
-*/  REBYTE *Scan_Hex(REBYTE *cp, REBI64 *num, REBCNT minlen, REBCNT maxlen)
+*/  const REBYTE *Scan_Hex(const REBYTE *cp, REBI64 *num, REBCNT minlen, REBCNT maxlen)
 /*
 **		Scans hex while it is valid and does not exceed the maxlen.
 **		If the hex string is longer than maxlen - it's an error.
@@ -90,7 +90,7 @@ typedef REBFLG (*MAKE_FUNC)(REBVAL *, REBVAL *, REBCNT);
 	REBYTE lex;
 
 	if (uni) {
-	    REBUNI *up = (REBUNI*)bp;
+	    const REBUNI *up = rCAST(const REBUNI *, bp);
 		c1 = up[0];
 		c2 = up[1];
 	} else {

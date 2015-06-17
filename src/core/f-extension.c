@@ -390,7 +390,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 
 /***********************************************************************
 **
-*/	void Make_Command(REBVAL *value, REBVAL *def)
+*/	void Make_Command(REBVAL *value, const REBVAL *def)
 /*
 **		Assumes prior function has already stored the spec and args
 **		series. This function validates the body.
@@ -589,7 +589,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 
 		// Call the command (also supports different extension modules):
 		func  = BLK_HEAD(VAL_FUNC_BODY(func));
-		n = (REBCNT)VAL_INT64(func + 1);
+		n = sCAST(REBCNT, VAL_INT64(func + 1));
 		ext = &Ext_List[VAL_I32(VAL_OBJ_VALUE(func, 1))]; // Handler
 		n = ext->call(n, &frm, ctx);
 		val = DS_RETURN;
