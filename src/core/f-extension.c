@@ -120,7 +120,7 @@ x*/	RXIARG Value_To_RXI(REBVAL *val)
 
 /***********************************************************************
 **
-x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, int type)
+x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, REBCNT type)
 /*
 ***********************************************************************/
 {
