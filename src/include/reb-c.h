@@ -135,13 +135,13 @@
 **		can be tied in with that.
 **
 **		Hence for the moment, malloc() and free() are abstracted as
-**		Make_Mem() and Free_Mem().  Of particular note is that
+**		Alloc_Mem() and Free_Mem().  Of particular note is that
 **		Free_Mem() insists you know the size of the memory you are
 **		freeing, as it wants to be able to limit allocations and
 **		know when memory is reaching a certain threshold to run
 **		a garbage collection.
 **
-**		These macros help use Make_Mem and Free_Mem more safely,
+**		These macros help use Alloc_Mem and Free_Mem more safely,
 **		and are modeled after C++'s new/delete and new[]/delete[].
 **		Zero-filling helpers are provided to ease concern regarding
 **		the loss of the old macros:
@@ -152,13 +152,13 @@
 ***********************************************************************/
 
 #define ALLOC(t) \
-	r_cast(t *, Make_Mem(sizeof(t)))
+	r_cast(t *, Alloc_Mem(sizeof(t)))
 
 #define ALLOC_ZEROFILL(t) \
 	r_cast(t *, memset(ALLOC(t), '\0', sizeof(t)))
 
 #define ALLOC_ARRAY(t,n) \
-	r_cast(t *, Make_Mem(sizeof(t) * (n)))
+	r_cast(t *, Alloc_Mem(sizeof(t) * (n)))
 
 #define ALLOC_ARRAY_ZEROFILL(t,n) \
 	r_cast(t *, memset(ALLOC_ARRAY(t, (n)), '\0', sizeof(t) * (n)))

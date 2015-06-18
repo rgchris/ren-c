@@ -10783,7 +10783,7 @@ jinit_phuff_decoder (j_decompress_ptr cinfo)
 
 #ifndef CODI_DEFINED
 #include "reb-codec.h"
-extern long* Make_Mem(size_t size);
+extern long* Alloc_Mem(size_t size);
 extern void Register_Codec(const REBYTE *name, codo dispatcher);
 #endif
 

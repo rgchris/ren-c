@@ -114,7 +114,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 
 /***********************************************************************
 **
-*/	void *Make_Mem(size_t size)
+*/	void *Alloc_Mem(size_t size)
 /*
 **		Main memory allocation wrapper function.
 **
@@ -174,7 +174,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	}
 
 	// For pool lookup. Maps size to pool index. (See Find_Pool below)
-	PG_Pool_Map = r_cast(REBYTE *, Make_Mem((4 * MEM_BIG_SIZE) + 4)); // extra
+	PG_Pool_Map = r_cast(REBYTE *, Alloc_Mem((4 * MEM_BIG_SIZE) + 4)); // extra
 	n = 9;  // sizes 0 - 8 are pool 0
 	for (; n <= 16 * MEM_MIN_SIZE; n++) PG_Pool_Map[n] = MEM_TINY_POOL     + ((n-1) / MEM_MIN_SIZE);
 	for (; n <= 32 * MEM_MIN_SIZE; n++) PG_Pool_Map[n] = MEM_SMALL_POOLS-4 + ((n-1) / (MEM_MIN_SIZE * 4));
@@ -235,7 +235,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	REBCNT	units = pool->units;
 	REBCNT	mem_size = pool->wide * units + sizeof(REBSEG);
 
-	seg = r_cast(REBSEG *, Make_Mem(mem_size));
+	seg = r_cast(REBSEG *, Alloc_Mem(mem_size));
 	if (!seg) vCrash1(RP_NO_MEMORY, mem_size);
 
 	memset(seg, NUL, mem_size);  // needed to clear series nodes
@@ -327,7 +327,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 		Debug_Fmt_Num("Alloc1:", length);
 #endif
 
-		node = r_cast(REBNOD *, Make_Mem(length));
+		node = r_cast(REBNOD *, Alloc_Mem(length));
 
 		if (!node) Trap0(RE_NO_MEMORY);
 
@@ -395,7 +395,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 #ifdef DEBUGGING
 			Debug_Num("Alloc2:", length);
 #endif
-		node = r_cast(REBNOD *, Make_Mem(length));
+		node = r_cast(REBNOD *, Alloc_Mem(length));
 
 		if (!node) {
 			Free_Node(SERIES_POOL, (REBNOD *)series);

@@ -337,7 +337,7 @@ void Unmap_Bytes(void *srcp, REBYTE **dstp, const char *map) {
 			colors = bmih.biClrUsed;
 
 		if (colors) {
-			ctab = r_cast(RGBQUADPTR, Make_Mem(colors * sizeof(RGBQUAD)));
+			ctab = r_cast(RGBQUADPTR, Alloc_Mem(colors * sizeof(RGBQUAD)));
 			memcpy(ctab, cp, colors * sizeof(RGBQUAD));
 			cp += colors * sizeof(RGBQUAD);
 		}
@@ -543,7 +543,7 @@ error:
 	bmfh.bfOffBits = 14 + 40;
 
 	// Create binary string:
-	codi->data = r_cast(unsigned char *, Make_Mem(bmfh.bfSize));
+	codi->data = r_cast(unsigned char *, Alloc_Mem(bmfh.bfSize));
 	cp = codi->data;
 	codi->len = bmfh.bfSize;
 	Unmap_Bytes(&bmfh, &cp, mapBITMAPFILEHEADER);

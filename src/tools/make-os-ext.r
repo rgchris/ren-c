@@ -262,7 +262,7 @@ extern REBOL_HOST_LIB *Host_Lib;
 **	"OS" MEMORY ALLOCATION AND FREEING MACROS
 **
 **		For better or for worse, Rebol's hostkit didn't want to expose
-**		the interpreter's internal and pooled Make_Mem or Free_Mem.
+**		the interpreter's internal and pooled Alloc_Mem or Free_Mem.
 **		(see the comments in reb-c.h on NEW and DELETE about that).
 **		The theory was that the host kit shouldn't use malloc in
 **		general, due to an idea that some hosts would have their
