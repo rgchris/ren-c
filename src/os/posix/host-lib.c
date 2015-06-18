@@ -252,7 +252,7 @@ static void *Task_Ready;
 	// !!! assert(sizeof(REBCHR) == sizeof(char));
 	// For better or worse, <assert.h> is not currently included (?)
 
-	strncpy(sCAST(char *, str), strerror(errnum), len);
+	strncpy(cast(char *, str), strerror(errnum), len);
 	return str;
 }
 

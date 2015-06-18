@@ -156,7 +156,7 @@ static int longaligned(void) {
 
 void Map_Bytes(void *dstp, REBYTE **srcp, const char *map) {
 	REBYTE *src = *srcp;
-	REBYTE *dst = rCAST(REBYTE *, dstp);
+	REBYTE *dst = r_cast(REBYTE *, dstp);
 	char c;
 #ifdef ENDIAN_LITTLE
 	while ((c = *map++) != 0) {
@@ -212,7 +212,7 @@ void Map_Bytes(void *dstp, REBYTE **srcp, const char *map) {
 }
 
 void Unmap_Bytes(void *srcp, REBYTE **dstp, const char *map) {
-	REBYTE *src = rCAST(REBYTE *, srcp);
+	REBYTE *src = r_cast(REBYTE *, srcp);
 	REBYTE *dst = *dstp;
 	char c;
 #ifdef ENDIAN_LITTLE
@@ -337,7 +337,7 @@ void Unmap_Bytes(void *srcp, REBYTE **dstp, const char *map) {
 			colors = bmih.biClrUsed;
 
 		if (colors) {
-			ctab = rCAST(RGBQUADPTR, Make_Mem(colors * sizeof(RGBQUAD)));
+			ctab = r_cast(RGBQUADPTR, Make_Mem(colors * sizeof(RGBQUAD)));
 			memcpy(ctab, cp, colors * sizeof(RGBQUAD));
 			cp += colors * sizeof(RGBQUAD);
 		}
@@ -350,7 +350,7 @@ void Unmap_Bytes(void *srcp, REBYTE **dstp, const char *map) {
 	codi->h = h;
 	codi->extra.bits = ALLOC_ARRAY(u32, w * h);
 
-	dp = sCAST(REBCNT *, codi->extra.bits);
+	dp = cast(REBCNT *, codi->extra.bits);
 	dp += w * h - w;
 
 	for (y = 0; y<h; y++) {
@@ -543,7 +543,7 @@ error:
 	bmfh.bfOffBits = 14 + 40;
 
 	// Create binary string:
-	codi->data = rCAST(unsigned char *, Make_Mem(bmfh.bfSize));
+	codi->data = r_cast(unsigned char *, Make_Mem(bmfh.bfSize));
 	cp = codi->data;
 	codi->len = bmfh.bfSize;
 	Unmap_Bytes(&bmfh, &cp, mapBITMAPFILEHEADER);
@@ -562,7 +562,7 @@ error:
 	bmih.biClrImportant = 0;
 	Unmap_Bytes(&bmih, &cp, mapBITMAPINFOHEADER);
 
-	dp = rCAST(REBCNT *, codi->extra.bits);
+	dp = r_cast(REBCNT *, codi->extra.bits);
 	dp += w * h - w;
 
 	for (y = 0; y<h; y++) {

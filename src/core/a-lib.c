@@ -102,7 +102,7 @@ RL_API int RL_Init(REBARGS *rargs, void *lib)
 	int marker;
 	REBUPT bounds;
 
-	Host_Lib = rCAST(REBOL_HOST_LIB *, lib);
+	Host_Lib = r_cast(REBOL_HOST_LIB *, lib);
 
 	if (Host_Lib->size < HOST_LIB_SIZE) return 1;
 	if (((HOST_LIB_VER << 16) + HOST_LIB_SUM) != Host_Lib->ver_sum) return 2;
@@ -211,7 +211,7 @@ RL_API void *RL_Extend(REBYTE *source, RXICAL call)
 	value = Append_Value(ser);
 	Set_Binary(value, Copy_Bytes(source, -1)); // UTF-8
 	value = Append_Value(ser);
-	SET_HANDLE_CODE(value, rCAST(CFUNC, call));
+	SET_HANDLE_CODE(value, r_cast(CFUNC, call));
 
 	return Extension_Lib();
 }

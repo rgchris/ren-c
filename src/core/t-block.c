@@ -369,14 +369,14 @@ static struct {
 
 	if (sort_flags.reverse)
 		return Cmp_Value(
-			rCAST(const REBVAL *, v2) + sort_flags.offset,
-			rCAST(const REBVAL *, v1) + sort_flags.offset,
+			r_cast(const REBVAL *, v2) + sort_flags.offset,
+			r_cast(const REBVAL *, v1) + sort_flags.offset,
 			sort_flags.cased
 		);
 	else
 		return Cmp_Value(
-			rCAST(const REBVAL *, v1) + sort_flags.offset,
-			rCAST(const REBVAL *, v2) + sort_flags.offset,
+			r_cast(const REBVAL *, v1) + sort_flags.offset,
+			r_cast(const REBVAL *, v2) + sort_flags.offset,
 			sort_flags.cased
 		);
 

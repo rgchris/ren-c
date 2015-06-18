@@ -84,5 +84,5 @@
 /*
 ***********************************************************************/
 {
-	OS_CREATE_THREAD(rCAST(CFUNC, Launch_Task), task, 50000);
+	OS_CREATE_THREAD(r_cast(CFUNC, Launch_Task), task, 50000);
 }

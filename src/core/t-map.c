@@ -182,7 +182,7 @@
 
 	if (!series->extra.series) return;
 
-	hashes = rCAST(REBCNT *, series->extra.series->data);
+	hashes = r_cast(REBCNT *, series->extra.series->data);
 
 	val = BLK_HEAD(series);
 	for (n = 0; n < series->tail; n += 2, val += 2) {

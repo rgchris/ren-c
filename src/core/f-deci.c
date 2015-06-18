@@ -561,8 +561,8 @@ deci decimal_to_deci (REBDEC a) {
 
 	result.s = s;
 	result.m2 = 0;
-	result.m1 = sCAST(REBCNT, d >> 32);
-	result.m0 = sCAST(REBCNT, d);
+	result.m1 = cast(REBCNT, d >> 32);
+	result.m0 = cast(REBCNT, d);
 	result.e = 0;
 
 	return deci_ldexp(result, e);

@@ -118,7 +118,7 @@ static void close_stdio(void)
 /*
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 
 	close_stdio();
 	//if (GET_FLAG(dev->flags, RDF_OPEN)) FreeConsole();

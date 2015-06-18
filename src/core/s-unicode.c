@@ -879,9 +879,9 @@ ConversionResult ConvertUTF8toUTF32 (
 
 		// Combine bytes in big or little endian format
 		if (lee)
-			ch = src[0] + (sCAST(UTF32, src[1]) << 8);
+			ch = src[0] + (cast(UTF32, src[1]) << 8);
 		else
-			ch = (sCAST(UTF32, src[0]) << 8) + src[1];
+			ch = (cast(UTF32, src[0]) << 8) + src[1];
 
 		// Adjust source pointer and length to indicate input consumed
 		src += 2;
@@ -981,8 +981,8 @@ ConversionResult ConvertUTF8toUTF32 (
 {
 	REBCNT size = 0;
 	REBCNT c;
-	const REBYTE *bp = uni ? NULL : rCAST(const REBYTE *, p);
-	const REBUNI *up = uni ? rCAST(const REBUNI *, p) : NULL;
+	const REBYTE *bp = uni ? NULL : r_cast(const REBYTE *, p);
+	const REBUNI *up = uni ? r_cast(const REBUNI *, p) : NULL;
 
 	for (; len > 0; len--) {
 		c = uni ? *up++ : *bp++;
@@ -1056,8 +1056,8 @@ ConversionResult ConvertUTF8toUTF32 (
 	REBINT n;
 	REBYTE buf[8];
 	REBYTE *bs = dst; // save start
-	const REBYTE *bp = uni ? NULL : sCAST(const REBYTE *, p);
-	const REBUNI *up = uni ? sCAST(const REBUNI *, p) : NULL;
+	const REBYTE *bp = uni ? NULL : cast(const REBYTE *, p);
+	const REBUNI *up = uni ? cast(const REBUNI *, p) : NULL;
 	REBCNT cnt;
 
     if (len)
@@ -1077,7 +1077,7 @@ ConversionResult ConvertUTF8toUTF32 (
 				c = LF;
 			}
 #endif
-			*dst++ = sCAST(REBYTE, c);
+			*dst++ = cast(REBYTE, c);
 			max--;
 		}
 		else {
@@ -1092,9 +1092,9 @@ ConversionResult ConvertUTF8toUTF32 (
 	if (len) *len = dst - bs;
 
 	if (uni)
-		return up - sCAST(const REBUNI *, p);
+		return up - cast(const REBUNI *, p);
 
-	return bp - sCAST(const REBYTE *, p);
+	return bp - cast(const REBYTE *, p);
 }
 
 
@@ -1224,13 +1224,13 @@ ConversionResult ConvertUTF8toUTF32 (
 ***********************************************************************/
 {
 	REBCNT len;
-	const char *cp = rCAST(const char *, up); // "C"har vs. "U"nicode
+	const char *cp = r_cast(const char *, up); // "C"har vs. "U"nicode
 
 	do {
 		// A size_t -1 is a portable way of saying 'maximum size_t',
 		// since we have no known limit on the search length
-		cp = sCAST(const char *, memchr(cp, 0, sCAST(size_t, -1)));
-		len = cp - rCAST(const char *, up);
+		cp = cast(const char *, memchr(cp, 0, cast(size_t, -1)));
+		len = cp - r_cast(const char *, up);
 
 		// If it's at an even position, we can check to see if the
 		// next byte is zero as well.  If so we've found a proper

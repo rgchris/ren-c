@@ -250,7 +250,7 @@
 			}
 
 			if (v > 255) v = 255;
-			*vp = sCAST(REBYTE, v);
+			*vp = cast(REBYTE, v);
 		}
 		goto ret_value;
 	}
@@ -258,7 +258,7 @@
 	// !!!! merge with SWITCH below !!!
 	if (action == A_COMPLEMENT) {
 		for (;len > 0; len--, vp++)
-			*vp = sCAST(REBYTE, ~(*vp));
+			*vp = cast(REBYTE, ~(*vp));
 		goto ret_value;
 	}
 	if (action == A_RANDOM) {

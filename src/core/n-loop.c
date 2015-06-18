@@ -146,15 +146,15 @@
 	REBDEC e;
 	REBDEC i;
 
-	if (IS_INTEGER(start)) s = sCAST(REBDEC, VAL_INT64(start));
+	if (IS_INTEGER(start)) s = cast(REBDEC, VAL_INT64(start));
 	else if (IS_DECIMAL(start) || IS_PERCENT(start)) s = VAL_DECIMAL(start);
 	else vTrap_Arg(start);
 
-	if (IS_INTEGER(end)) e = sCAST(REBDEC, VAL_INT64(end));
+	if (IS_INTEGER(end)) e = cast(REBDEC, VAL_INT64(end));
 	else if (IS_DECIMAL(end) || IS_PERCENT(end)) e = VAL_DECIMAL(end);
 	else vTrap_Arg(end);
 
-	if (IS_INTEGER(incr)) i = sCAST(REBDEC, VAL_INT64(incr));
+	if (IS_INTEGER(incr)) i = cast(REBDEC, VAL_INT64(incr));
 	else if (IS_DECIMAL(incr) || IS_PERCENT(incr)) i = VAL_DECIMAL(incr);
 	else vTrap_Arg(incr);
 
@@ -213,7 +213,7 @@
 			dat = VAL_SERIES(var);
 			idx = VAL_INDEX(var);
 			if (idx < 0) break;
-			if (idx >= sCAST(REBINT, SERIES_TAIL(dat))) {
+			if (idx >= cast(REBINT, SERIES_TAIL(dat))) {
 				if (inc >= 0) break;
 				idx = SERIES_TAIL(dat) + inc; // negative
 				if (idx < 0) break;

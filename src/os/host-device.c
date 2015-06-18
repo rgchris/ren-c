@@ -194,7 +194,7 @@ static int Poll_Default(REBDEV *dev)
 **
 ***********************************************************************/
 {
-	REBUPT handle = sCAST(REBUPT, handle_opaque);
+	REBUPT handle = cast(REBUPT, handle_opaque);
 	REBINT d;
 	REBDEV *dev;
 	REBREQ **prior;
@@ -205,7 +205,7 @@ static int Poll_Default(REBDEV *dev)
 		prior = &dev->pending;
 		// Scan the pending requests, mark the one we got:
 		for (req = *prior; req; req = *prior) {
-			if (rCAST(REBUPT, req->requestee.handle) == handle) {
+			if (r_cast(REBUPT, req->requestee.handle) == handle) {
 				req->error = error; // zero when no error
 				SET_FLAG(req->flags, RRF_DONE);
 				return;
@@ -227,7 +227,7 @@ static int Poll_Default(REBDEV *dev)
 	REBEVT evt;
 	memset(&evt, NUL, sizeof(evt));
 
-	evt.type = sCAST(REBYTE, type);
+	evt.type = cast(REBYTE, type);
 	evt.model = EVM_DEVICE;
 	evt.eventee.req = req;
 	if (type == EVT_ERROR) evt.data = req->error;

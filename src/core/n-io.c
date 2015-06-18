@@ -54,10 +54,10 @@ static REBSER *Read_All_File(char *fname)
 	if (file.error) return 0;
 
 	// !!! File size is 64-bit value; review truncation here
-	ser = Make_Binary(sCAST(REBCNT, file.special.file.size));
+	ser = Make_Binary(cast(REBCNT, file.special.file.size));
 
 	file.data = BIN_DATA(ser);
-	file.length = sCAST(REBCNT, file.special.file.size);
+	file.length = cast(REBCNT, file.special.file.size);
 
 	OS_DO_DEVICE(&file, RDC_READ);
 
@@ -492,7 +492,7 @@ chk_neg:
 	// language.  We've hopefully accomplished this.
 	assert(SERIES_WIDE(ser) == sizeof(REBCHR));
 	// !!! Used to say "use len for bool", what would that mean?
-	n = OS_SET_CURRENT_DIR(rCAST(REBCHR *, ser->data));
+	n = OS_SET_CURRENT_DIR(r_cast(REBCHR *, ser->data));
 	if (!n) Trap_Arg(arg); // !!! ERROR MSG
 
 	return R_ARG1;
@@ -684,7 +684,7 @@ chk_neg:
 		#ifdef TO_WIN32
 			// str is an array in UCS-2
 			assert(sizeof(REBCHR) == sizeof(REBUNI));
-			Append_Uni_Uni(dir, rCAST(REBUNI *, str), n);
+			Append_Uni_Uni(dir, r_cast(REBUNI *, str), n);
 		#else
 			// str is NOT an array in UCS-2, assume UTF-8 and needs decoding.
 			assert(sizeof(REBCHR) == sizeof(REBYTE));
@@ -731,18 +731,18 @@ chk_neg:
 
 	if (D_REF(ARG_REQUEST_FILE_FILE)) {
 		ser = Value_To_OS_Path(D_ARG(ARG_REQUEST_FILE_NAME));
-		fr.dir = rCAST(REBCHR *, ser->data);
+		fr.dir = r_cast(REBCHR *, ser->data);
 		n = ser->tail;
 		if (fr.dir[n-1] != OS_DIR_SEP) {
 			if (n+2 > fr.len) n = fr.len - 2;
-			COPY_OS_STR(fr.files, rCAST(REBCHR *, ser->data), n);
+			COPY_OS_STR(fr.files, r_cast(REBCHR *, ser->data), n);
 			fr.files[n] = 0;
 		}
 	}
 
 	if (D_REF(ARG_REQUEST_FILE_FILTER)) {
 		ser = Block_To_String_List(D_ARG(ARG_REQUEST_FILE_LIST));
-		fr.filter = rCAST(REBCHR *, ser->data);
+		fr.filter = r_cast(REBCHR *, ser->data);
 	}
 
 	if (D_REF(ARG_REQUEST_FILE_TITLE))

@@ -60,8 +60,8 @@
 #ifdef POOL_MAP
 #define FIND_POOL(n) ( \
 	(n <= 4 * MEM_BIG_SIZE) \
-		? sCAST(REBCNT, PG_Pool_Map[n]) \
-		: sCAST(REBCNT, SYSTEM_POOL) \
+		? cast(REBCNT, PG_Pool_Map[n]) \
+		: cast(REBCNT, SYSTEM_POOL) \
 	)
 #else
 #define FIND_POOL(n) Find_Pool(n);
@@ -174,7 +174,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	}
 
 	// For pool lookup. Maps size to pool index. (See Find_Pool below)
-	PG_Pool_Map = rCAST(REBYTE *, Make_Mem((4 * MEM_BIG_SIZE) + 4)); // extra
+	PG_Pool_Map = r_cast(REBYTE *, Make_Mem((4 * MEM_BIG_SIZE) + 4)); // extra
 	n = 9;  // sizes 0 - 8 are pool 0
 	for (; n <= 16 * MEM_MIN_SIZE; n++) PG_Pool_Map[n] = MEM_TINY_POOL     + ((n-1) / MEM_MIN_SIZE);
 	for (; n <= 32 * MEM_MIN_SIZE; n++) PG_Pool_Map[n] = MEM_SMALL_POOLS-4 + ((n-1) / (MEM_MIN_SIZE * 4));
@@ -235,7 +235,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	REBCNT	units = pool->units;
 	REBCNT	mem_size = pool->wide * units + sizeof(REBSEG);
 
-	seg = rCAST(REBSEG *, Make_Mem(mem_size));
+	seg = r_cast(REBSEG *, Make_Mem(mem_size));
 	if (!seg) vCrash1(RP_NO_MEMORY, mem_size);
 
 	memset(seg, NUL, mem_size);  // needed to clear series nodes
@@ -248,12 +248,12 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	// Add new nodes to the end of free list:
 
 	// goto end
-	node = rCAST(REBNOD *, &pool->first);
-	for (; *node; node = rCAST(REBNOD *, *node)) {}
+	node = r_cast(REBNOD *, &pool->first);
+	for (; *node; node = r_cast(REBNOD *, *node)) {}
 
 	for (next = (REBYTE *)(seg + 1); units > 0; units--, next += pool->wide) {
-		*node = rCAST(REBNOD, next);
-		node = rCAST(REBNOD *, *node);
+		*node = r_cast(REBNOD, next);
+		node = r_cast(REBNOD *, *node);
 	}
 	*node = 0;
 }
@@ -274,7 +274,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 	pool = &Mem_Pools[pool_id];
 	if (!pool->first) Fill_Pool(pool);
 	node = pool->first;
-	pool->first = rCAST(REBNOD *, *node);
+	pool->first = r_cast(REBNOD *, *node);
 	pool->free--;
 	return (void *)node;
 }
@@ -318,7 +318,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 		pool = &Mem_Pools[pool_num];
 		if (!pool->first) Fill_Pool(pool);
 		node = pool->first;
-		pool->first = rCAST(REBNOD *, *node);
+		pool->first = r_cast(REBNOD *, *node);
 		pool->free--;
 		length = pool->wide;
 	} else {
@@ -327,7 +327,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 		Debug_Fmt_Num("Alloc1:", length);
 #endif
 
-		node = rCAST(REBNOD *, Make_Mem(length));
+		node = r_cast(REBNOD *, Make_Mem(length));
 
 		if (!node) Trap0(RE_NO_MEMORY);
 
@@ -372,14 +372,14 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 
 //	if (GC_TRIGGER) Recycle();
 
-	series = rCAST(REBSER *, Make_Node(SERIES_POOL));
+	series = r_cast(REBSER *, Make_Node(SERIES_POOL));
 	length *= wide;
 	pool_num = FIND_POOL(length);
 	if (pool_num < SYSTEM_POOL) {
 		pool = &Mem_Pools[pool_num];
 		if (!pool->first) Fill_Pool(pool);
 		node = pool->first;
-		pool->first = rCAST(REBNOD *, *node);
+		pool->first = r_cast(REBNOD *, *node);
 		pool->free--;
 		length = pool->wide;
 		memset(node, NUL, length);
@@ -395,7 +395,7 @@ const REBPOOLSPEC Mem_Pool_Spec[MAX_POOLS] =
 #ifdef DEBUGGING
 			Debug_Num("Alloc2:", length);
 #endif
-		node = rCAST(REBNOD *, Make_Mem(length));
+		node = r_cast(REBNOD *, Make_Mem(length));
 
 		if (!node) {
 			Free_Node(SERIES_POOL, (REBNOD *)series);
@@ -616,7 +616,7 @@ clear_header:
 		count = 0;
 		// Check each free node in the memory pool:
 		node = Mem_Pools[pool_num].first;
-		for (; node; node = rCAST(REBNOD *, *node)) {
+		for (; node; node = r_cast(REBNOD *, *node)) {
 			count++;
 			// The node better belong to one of the pool's segments:
 			for (seg = Mem_Pools[pool_num].segs; seg; seg = seg->next) {

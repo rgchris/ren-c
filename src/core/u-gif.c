@@ -87,7 +87,7 @@ void Chrom_Key_Alpha(REBVAL *v,REBCNT col,REBINT blitmode) {
 	short	*prefix;
 	REBYTE	first, *pixel_stack, *suffix, *top_stack;
 
-	suffix = rCAST(
+	suffix = r_cast(
 		REBYTE *,
 		Make_Mem(MAX_STACK_SIZE * (sizeof(REBYTE) + sizeof(REBYTE) + sizeof(short)))
 	);
@@ -298,7 +298,7 @@ void Chrom_Key_Alpha(REBVAL *v,REBCNT col,REBINT blitmode) {
 			Append_Series(VAL_SERIES(Temp2_Value), (REBMEM *)Temp_Value, 1);
 		}
 */
-		dp = codi->extra.bits = rCAST(u32 *, Make_Mem(w * h * 4));
+		dp = codi->extra.bits = r_cast(u32 *, Make_Mem(w * h * 4));
 		codi->w = w;
 		codi->h = h;
 

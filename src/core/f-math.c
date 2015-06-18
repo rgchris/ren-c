@@ -255,7 +255,7 @@
 	else if (decimal_digits > MAX_DIGITS) decimal_digits = MAX_DIGITS;
 
 	sig = AS_BYTES(
-		dtoa(d, 0, decimal_digits, &e, &sgn, rCAST(char **, &rve))
+		dtoa(d, 0, decimal_digits, &e, &sgn, r_cast(char **, &rve))
 	);
 
 	digits_obtained = rve - sig;

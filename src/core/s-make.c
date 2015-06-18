@@ -356,24 +356,24 @@ x*/	REBCNT Insert_Value(REBSER *series, REBCNT index, REBVAL *item, REBCNT type,
 		n = Decode_UTF8(UNI_HEAD(up), VAL_BIN_DATA(val), n, FALSE);
 		SERIES_TAIL(up) = abs(n);
 		UNI_TERM(up);
-		return rCAST(REBCHR *, UNI_HEAD(up));
+		return r_cast(REBCHR *, UNI_HEAD(up));
 	}
 	else {
 		// Already wide, we can use it as-is:
 		// !Assumes the OS uses same wide format!
 		assert(sizeof(REBCHR) == sizeof(REBUNI));
-		return rCAST(REBCHR *, VAL_UNI_DATA(val));
+		return r_cast(REBCHR *, VAL_UNI_DATA(val));
 	}
 #else
 	if (VAL_STR_IS_ASCII(val)) {
 		// On Linux/Unix we can use ASCII directly (it is valid UTF-8):
-		return rCAST(REBCHR *, VAL_BIN_DATA(val));
+		return r_cast(REBCHR *, VAL_BIN_DATA(val));
 	}
 	else {
 		REBCNT n = VAL_LEN(val);
 		REBSER *ser = Prep_Bin_Str(val, 0, &n);
 		// NOTE: may return a shared buffer!
-		return rCAST(REBCHR *, BIN_HEAD(ser)); 
+		return r_cast(REBCHR *, BIN_HEAD(ser)); 
 	}
 #endif
 }

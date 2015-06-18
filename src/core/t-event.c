@@ -113,7 +113,7 @@
 		if (IS_GOB(val)) {
 			VAL_EVENT_MODEL(value) = EVM_GUI;
 			// !!! Bad reinterpret_cast, should be a union!
-			VAL_EVENT_SER(value) = rCAST(REBSER *, VAL_GOB(val));
+			VAL_EVENT_SER(value) = r_cast(REBSER *, VAL_GOB(val));
 			break;
 		}
 		return FALSE; 
@@ -236,7 +236,7 @@
 		if (IS_EVENT_MODEL(value, EVM_GUI)) {
 			if (VAL_EVENT_SER(value)) {
 				// !!! Bad reinterpret_cast, should be a union
-				SET_GOB(val, rCAST(REBGOB *, VAL_EVENT_SER(value)));
+				SET_GOB(val, r_cast(REBGOB *, VAL_EVENT_SER(value)));
 				break;
 			}
 		}
@@ -300,7 +300,7 @@
 			// !!! Is it supposed to be an OS string, e.g. REBCHR?  If so
 			// there is a problem here because it's using Copy_Bytes which
 			// is Latin8 only...
-			REBYTE *str = rCAST(REBYTE *, VAL_EVENT_SER(value));
+			REBYTE *str = r_cast(REBYTE *, VAL_EVENT_SER(value));
 			VAL_EVENT_SER(value) = Copy_Bytes(str, -1);
 			SET_FLAG(VAL_EVENT_FLAGS(value), EVF_COPIED);
 			OS_FREE_MEM(str);

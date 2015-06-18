@@ -164,13 +164,13 @@ extern const char Str_Banner[];
 		REBSER *text;
 
 		// !!! The "Decompress" operation takes a REBSER as an argument.
-		// We fake one using the const data, but notice the nasty cCAST
+		// We fake one using the const data, but notice the nasty c_cast
 		// (a const_cast that casts away const).  Accessing such data is
 		// as non-const is undefined behavior.  Even if you think that's
 		// language-lawyer wonkery (it's not), note that if the GC tried to
 		// collect this series it would free const data!  --@HostileFork
 
-		spec.data = cCAST(REBYTE *, Native_Specs);
+		spec.data = c_cast(REBYTE *, Native_Specs);
 		spec.tail = NAT_COMPRESSED_SIZE;
 
 		text = Decompress(&spec, 0, -1, NAT_UNCOMPRESSED_SIZE, 0);
@@ -186,7 +186,7 @@ extern const char Str_Banner[];
 
 	Set_Root_Series(ROOT_BOOT, boot, "boot block");	// Do not let it get GC'd
 
-	Boot_Block = rCAST(BOOT_BLK *, VAL_BLK(BLK_HEAD(boot)));
+	Boot_Block = r_cast(BOOT_BLK *, VAL_BLK(BLK_HEAD(boot)));
 
 	if (VAL_TAIL(&Boot_Block->types) != REB_MAX)
 		vCrash(RP_BAD_BOOT_TYPE_BLOCK);
@@ -727,7 +727,7 @@ extern const char Str_Banner[];
 	REBCNT sym = Make_Word(name, 0);
 
 	value = Append_Frame(VAL_OBJ_FRAME(value), 0, sym);
-	SET_HANDLE_CODE(value, rCAST(CFUNC, dispatcher));
+	SET_HANDLE_CODE(value, r_cast(CFUNC, dispatcher));
 }
 
 

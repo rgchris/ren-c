@@ -162,7 +162,7 @@ static int Fetch_Buf()
 	Std_IO_Req.length = strlen(AS_CCHARS(buf));
 	// !!! WARNING: This const cast may be very unsafe and lead to
 	// undefined behavior.  A better protocol is needed.  
-	Std_IO_Req.common.data = cCAST(REBYTE *, buf);
+	Std_IO_Req.common.data = c_cast(REBYTE *, buf);
 	Std_IO_Req.actual = 0;
 
 	OS_Do_Device(&Std_IO_Req, RDC_WRITE);

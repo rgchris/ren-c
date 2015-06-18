@@ -822,8 +822,8 @@
 {
 	long t, *a, *b;
 
-	a = rCAST(long *, m1);
-	b = rCAST(long *, m2);
+	a = r_cast(long *, m1);
+	b = r_cast(long *, m2);
 	len /= sizeof(long);
 	while (len--) {
 		t = *b;

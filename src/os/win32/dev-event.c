@@ -84,7 +84,7 @@ extern HINSTANCE App_Instance;	// From Main module.
 **
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 
 	WNDCLASSEX wc;
 	memset(&wc, NUL, sizeof(wc));

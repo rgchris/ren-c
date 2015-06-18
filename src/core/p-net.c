@@ -50,12 +50,12 @@
 	SET_OBJECT(ret, obj);
 	Set_Tuple(
 		OFV(obj, STD_NET_INFO_LOCAL_IP),
-		rCAST(REBYTE *, &sock->special.net.local_ip),
+		r_cast(REBYTE *, &sock->special.net.local_ip),
 		4
 	);
 	Set_Tuple(
 		OFV(obj, STD_NET_INFO_REMOTE_IP),
-		rCAST(REBYTE *, &sock->special.net.remote_ip),
+		r_cast(REBYTE *, &sock->special.net.remote_ip),
 		4
 	);
 	SET_INTEGER(
@@ -93,7 +93,7 @@
 	SET_NONE(OFV(port, STD_PORT_STATE)); // just to be sure.
 
 	// Copy over the new sock data:
-	sock = rCAST(REBREQ *, Use_Port_State(port, RDI_NET, sizeof(*sock)));
+	sock = r_cast(REBREQ *, Use_Port_State(port, RDI_NET, sizeof(*sock)));
 	*sock = *nsock;
 	sock->clen = sizeof(*sock);
 	sock->port = port;
@@ -122,7 +122,7 @@
 	arg = D_ARG(2);
 	refs = 0;
 
-	sock = rCAST(REBREQ *, Use_Port_State(port, RDI_NET, sizeof(*sock)));
+	sock = r_cast(REBREQ *, Use_Port_State(port, RDI_NET, sizeof(*sock)));
 	//Debug_Fmt("Sock: %x", sock);
 	spec = OFV(port, STD_PORT_SPEC);
 	if (!IS_OBJECT(spec)) Trap0(RE_INVALID_PORT);

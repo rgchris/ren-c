@@ -90,7 +90,7 @@ typedef REBFLG (*MAKE_FUNC)(REBVAL *, const REBVAL *, REBCNT);
 	REBYTE lex;
 
 	if (uni) {
-	    const REBUNI *up = rCAST(const REBUNI *, bp);
+	    const REBUNI *up = r_cast(const REBUNI *, bp);
 		c1 = up[0];
 		c2 = up[1];
 	} else {

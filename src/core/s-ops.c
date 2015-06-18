@@ -713,9 +713,9 @@ static REBYTE seed_str[SEED_LEN] = {
 	if (VAL_BYTE_SIZE(val)) {
 		REBYTE *bp = VAL_BIN(val);
 		if (upper)
-			for (; n < len; n++) bp[n] = sCAST(REBYTE, UP_CASE(bp[n]));
+			for (; n < len; n++) bp[n] = cast(REBYTE, UP_CASE(bp[n]));
 		else {
-			for (; n < len; n++) bp[n] = sCAST(REBYTE, LO_CASE(bp[n]));
+			for (; n < len; n++) bp[n] = cast(REBYTE, LO_CASE(bp[n]));
 		}
 	} else {
 		REBUNI *up = VAL_UNI(val);

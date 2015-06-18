@@ -58,7 +58,7 @@ void Done_Device(int handle, int error);
 **
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 	SET_FLAG(dev->flags, RDF_INIT);
 	return DR_DONE;
 }

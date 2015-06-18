@@ -509,7 +509,7 @@ enum encoding_opts {
 // !!! Boot strings are passed to several debug and output routines that
 // assume their data is *not* UCS-2.
 #define BOOT_STR(c,i) \
-	cCAST(const char *, AS_CHARS(PG_Boot_Strs[(c)+(i)]))
+	c_cast(const char *, AS_CHARS(PG_Boot_Strs[(c)+(i)]))
 
 //-- Temporary Buffers
 //   These are reused for cases for appending, when length cannot be known.
@@ -533,7 +533,7 @@ enum encoding_opts {
 #define UNSAVE_SERIES(s) \
 	do { \
 		GC_Protect->tail--; \
-		assert(rCAST(REBSER **, GC_Protect->data)[GC_Protect->tail] == s); \
+		assert(r_cast(REBSER **, GC_Protect->data)[GC_Protect->tail] == s); \
 	} while (0)
 
 #ifdef NDEBUG
@@ -541,10 +541,10 @@ enum encoding_opts {
 #else
 	#ifdef OS_STACK_GROWS_UP
 		#define CHECK_STACK(v) \
-			if (rCAST(REBUPT, v) >= Stack_Limit) Trap_Stack();
+			if (r_cast(REBUPT, v) >= Stack_Limit) Trap_Stack();
 	#else
 		#define CHECK_STACK(v) \
-			if (rCAST(REBUPT, v) <= Stack_Limit) Trap_Stack();
+			if (r_cast(REBUPT, v) <= Stack_Limit) Trap_Stack();
 	#endif
 #endif
 

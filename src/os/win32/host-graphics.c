@@ -1215,10 +1215,10 @@ RL_LIB *RL; // Link back to reb-lib from embedded extensions
 **
 ***********************************************************************/
 {
-	RL = RL_Extend(rCAST(REBYTE *, &RX_graphics[0]), &RXE_Graphics);
-	RL_Extend(rCAST(REBYTE *, &RX_draw[0]), &RXE_Draw);
-	RL_Extend(rCAST(REBYTE *, &RX_shape[0]), &RXE_Shape);
-	RL_Extend(rCAST(REBYTE *, &RX_text[0]), &RXE_Text);
+	RL = RL_Extend(r_cast(REBYTE *, &RX_graphics[0]), &RXE_Graphics);
+	RL_Extend(r_cast(REBYTE *, &RX_draw[0]), &RXE_Draw);
+	RL_Extend(r_cast(REBYTE *, &RX_shape[0]), &RXE_Shape);
+	RL_Extend(r_cast(REBYTE *, &RX_text[0]), &RXE_Text);
 }
 
 #ifdef OLD__FUNCS_NEED_CONVERSION

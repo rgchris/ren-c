@@ -185,7 +185,7 @@
 
 	days = 0;
 
-	for (i = 0; i < sCAST(REBCNT, date.date.month - 1); i++)
+	for (i = 0; i < cast(REBCNT, date.date.month - 1); i++)
 		days += Month_Length(i, date.date.year);
 
 	return date.date.day + days;
@@ -385,7 +385,7 @@
 	REBI64 t2;
 
 	diff  = Diff_Date(VAL_DATE(d1), VAL_DATE(d2));
-	if (sCAST(REBCNT, abs(diff)) > (((1U << 31) - 1) / SECS_IN_DAY))
+	if (cast(REBCNT, abs(diff)) > (((1U << 31) - 1) / SECS_IN_DAY))
 		vTrap0(RE_OVERFLOW);
 
 	t1 = VAL_TIME(d1);

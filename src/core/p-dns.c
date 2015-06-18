@@ -50,7 +50,7 @@
 	arg = D_ARG(2);
 	*D_RET = *D_ARG(1);
 
-	sock = rCAST(REBREQ *, Use_Port_State(port, RDI_DNS, sizeof(*sock)));
+	sock = r_cast(REBREQ *, Use_Port_State(port, RDI_DNS, sizeof(*sock)));
 	spec = OFV(port, STD_PORT_SPEC);
 	if (!IS_OBJECT(spec)) Trap0(RE_INVALID_PORT);
 
@@ -105,7 +105,7 @@ pick:
 			if (GET_FLAG(sock->modes, RST_REVERSE)) {
 				Set_String(D_RET, Copy_Bytes(sock->common.data, strlen(AS_CHARS(sock->common.data))));
 			} else {
-				Set_Tuple(D_RET, rCAST(REBYTE *, &sock->special.net.remote_ip), 4);
+				Set_Tuple(D_RET, r_cast(REBYTE *, &sock->special.net.remote_ip), 4);
 			}
 			OS_DO_DEVICE(sock, RDC_CLOSE);
 		} else Trap_Range(arg);

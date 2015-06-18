@@ -351,7 +351,7 @@ REBCNT ARGB_To_BGR(REBCNT i)
 
 	// Output RGB image:
 	size = VAL_IMAGE_LEN(value); // # pixels (from index to tail)
-	data = rCAST(REBCNT *, VAL_IMAGE_DATA(value));
+	data = r_cast(REBCNT *, VAL_IMAGE_DATA(value));
 	up = Prep_Uni_Series(mold, (size * 6) + (size / 10) + 1);
 
 	for (len = 0; len < size; len++) {
@@ -366,7 +366,7 @@ REBCNT ARGB_To_BGR(REBCNT i)
 
 		up = Prep_Uni_Series(mold, (size * 2) + (size / 10) + 1);
 
-		data = rCAST(REBCNT *, VAL_IMAGE_DATA(value));
+		data = r_cast(REBCNT *, VAL_IMAGE_DATA(value));
 		for (len = 0; len < size; len++) {
 			if ((len % 10) == 0) *up++ = LF;
 			up = Form_Hex2_Uni(up, *data++ >> 24);

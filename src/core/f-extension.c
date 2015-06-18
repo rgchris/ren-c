@@ -130,7 +130,7 @@ x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, REBCNT type)
 		VAL_INT64(val) = arg.int64;
 		break;
 	case RXE_SER:
-		VAL_SERIES(val) = rCAST(REBSER *, arg.sri.series);
+		VAL_SERIES(val) = r_cast(REBSER *, arg.sri.series);
 		VAL_INDEX(val) = arg.sri.index;
 		break;
 	case RXE_PTR:
@@ -149,7 +149,7 @@ x*/	void RXI_To_Value(REBVAL *val, RXIARG arg, REBCNT type)
 		VAL_WORD_INDEX(val) = 0;
 		break;
 	case RXE_IMAGE:
-		VAL_SERIES(val) = rCAST(REBSER *, arg.iwh.image);
+		VAL_SERIES(val) = r_cast(REBSER *, arg.iwh.image);
 		VAL_IMAGE_WIDE(val) = arg.iwh.width;
 		VAL_IMAGE_HIGH(val) = arg.iwh.height;
 		break;
@@ -269,7 +269,7 @@ x*/	int Do_Callback(REBSER *obj, u32 name, RXIARG *args, RXIARG *result)
 	if (VAL_EVENT_TYPE(event) != EVT_CALLBACK)
 		return R_NONE;
 
-	cbi = rCAST(RXICBI *, VAL_EVENT_SER(event));
+	cbi = r_cast(RXICBI *, VAL_EVENT_SER(event));
 	if (!cbi)
 		return R_NONE;
 
@@ -337,7 +337,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 		}
 
 		// Call its info() function for header and code body:
-		info = rCAST(
+		info = r_cast(
 			INFO_FUNC, OS_FIND_FUNCTION(dll, BOOT_STR(RS_EXTENSION, 0))
 		);
 		if (!info) {
@@ -355,14 +355,14 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 		src = Copy_Bytes(code, -1); // Nursery protected
 
 		// null is allowed
-		call = rCAST(
+		call = r_cast(
 			RXICAL, OS_FIND_FUNCTION(dll, BOOT_STR(RS_EXTENSION, 2))
 		);
 	}
 	else {
 		// Hosted extension:
 		src = VAL_SERIES(val);
-		call = rCAST(RXICAL, VAL_HANDLE_CODE(D_ARG(3)));
+		call = r_cast(RXICAL, VAL_HANDLE_CODE(D_ARG(3)));
 		dll = 0;
 	}
 
@@ -522,7 +522,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 	REBEXT *ext;
 	REBCEC *ctx;
 
-	ctx = rCAST(REBCEC *, context);
+	ctx = r_cast(REBCEC *, context);
 	if (ctx) ctx->block = cmds;
 	blk = BLK_HEAD(cmds);
 
@@ -590,7 +590,7 @@ typedef REBYTE * (*INFO_FUNC)(REBINT opts, void *lib);
 
 		// Call the command (also supports different extension modules):
 		func  = BLK_HEAD(VAL_FUNC_BODY(func));
-		n = sCAST(REBCNT, VAL_INT64(func + 1));
+		n = cast(REBCNT, VAL_INT64(func + 1));
 		ext = &Ext_List[VAL_I32(VAL_OBJ_VALUE(func, 1))]; // Handler
 		n = ext->call(n, &frm, ctx);
 		val = DS_RETURN;

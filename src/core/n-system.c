@@ -431,7 +431,7 @@ err:
 
 	// Nasty alias, but it must be done:
 	// !!! add a check to validate the handle as a codec!!!!
-	result = (rCAST(codo, VAL_HANDLE_CODE(D_ARG(1))))(&codi);
+	result = (r_cast(codo, VAL_HANDLE_CODE(D_ARG(1))))(&codi);
 
 	if (codi.error != 0) {
 		if (result == CODI_CHECK) return R_FALSE;
@@ -467,7 +467,7 @@ err:
 		break;
 
 	case CODI_BLOCK:
-		Set_Block(D_RET, rCAST(REBSER *, codi.extra.other));
+		Set_Block(D_RET, r_cast(REBSER *, codi.extra.other));
 		break;
 
 	default:

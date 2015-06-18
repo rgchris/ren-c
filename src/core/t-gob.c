@@ -62,7 +62,7 @@ const REBCNT Gob_Flag_Words[] = {
 **
 ***********************************************************************/
 {
-	REBGOB *gob = rCAST(REBGOB *, Make_Node(GOB_POOL));
+	REBGOB *gob = r_cast(REBGOB *, Make_Node(GOB_POOL));
 	memset(gob, NUL, sizeof(*gob));
 	GOB_W(gob) = 100;
 	GOB_H(gob) = 100;
@@ -420,7 +420,7 @@ const REBCNT Gob_Flag_Words[] = {
 		}
 		else if (IS_INTEGER(val)) {
 			SET_GOB_DTYPE(gob, GOBD_INTEGER);
-			SET_GOB_DATA(gob, rCAST(REBSER *, sCAST(REBIPT, VAL_INT64(val))));
+			SET_GOB_DATA(gob, r_cast(REBSER *, cast(REBIPT, VAL_INT64(val))));
 		}
 		else if (IS_NONE(val))
 			SET_GOB_TYPE(gob, GOBT_NONE);

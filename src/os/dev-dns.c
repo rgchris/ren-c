@@ -120,7 +120,7 @@ extern HWND Event_Handle;
 		handle = WSAAsyncGetHostByAddr(
 			Event_Handle,
 			WM_DNS,
-			rCAST(char *, &sock->special.net.remote_ip),
+			r_cast(char *, &sock->special.net.remote_ip),
 			4,
 			AF_INET,
 			host,
@@ -136,7 +136,7 @@ extern HWND Event_Handle;
 	// Use old-style blocking DNS (mainly for testing purposes):
 	if (GET_FLAG(sock->modes, RST_REVERSE)) {
 		he = gethostbyaddr(
-			rCAST(char *, &sock->special.net.remote_ip), 4, AF_INET
+			r_cast(char *, &sock->special.net.remote_ip), 4, AF_INET
 		);
 		if (he) {
 			sock->special.net.host_info = host; //???
@@ -150,8 +150,8 @@ extern HWND Event_Handle;
 		if (he) {
 			sock->special.net.host_info = host; // ?? who deallocs?
 			memcpy(
-				rCAST(char *, &sock->special.net.remote_ip),
-				rCAST(char *, *he->h_addr_list),
+				r_cast(char *, &sock->special.net.remote_ip),
+				r_cast(char *, *he->h_addr_list),
 				4
 			); //he->h_length);
 			SET_FLAG(sock->flags, RRF_DONE);
@@ -180,7 +180,7 @@ extern HWND Event_Handle;
 **
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 	REBREQ **prior = &dev->pending;
 	REBREQ *req;
 	REBOOL change = FALSE;
@@ -196,7 +196,7 @@ extern HWND Event_Handle;
 			CLR_FLAG(req->flags, RRF_PENDING);
 
 			if (!req->error) { // success!
-				host = sCAST(HOSTENT *, req->special.net.host_info);
+				host = cast(HOSTENT *, req->special.net.host_info);
 				if (GET_FLAG(req->modes, RST_REVERSE))
 					req->common.data = AS_BYTES(host->h_name);
 				else

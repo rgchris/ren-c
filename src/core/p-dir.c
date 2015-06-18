@@ -55,11 +55,11 @@
 
 	// Temporary filename storage:
 	fname = BUF_OS_STR;
-	file.special.file.path = rCAST(REBCHR *, Reset_Buffer(fname, MAX_FILE_NAME));
+	file.special.file.path = r_cast(REBCHR *, Reset_Buffer(fname, MAX_FILE_NAME));
 
 	SET_FLAG(dir->modes, RFM_DIR);
 
-	dir->common.data = rCAST(REBYTE *, &file);
+	dir->common.data = r_cast(REBYTE *, &file);
 
 	while ((result = OS_DO_DEVICE(dir, RDC_READ)) == 0 && !GET_FLAG(dir->flags, RRF_DONE)) {
 		len = LEN_OS_STR(file.special.file.path);
@@ -123,7 +123,7 @@
 		memset(&file, NUL, sizeof(file));
 		 
 		ser = Value_To_OS_Path(path);
-		file.special.file.path = rCAST(REBCHR *, ser->data);
+		file.special.file.path = r_cast(REBCHR *, ser->data);
 		file.device = RDI_FILE;
 		len = OS_DO_DEVICE(&file, RDC_QUERY);
 		FREE_SERIES(ser);
@@ -175,7 +175,7 @@
 	// We depend on To_Local_Path giving us 2 extra chars for / and *
 	ser = Value_To_OS_Path(path);
 	len = ser->tail;
-	dir->special.file.path = rCAST(REBCHR *, ser->data);
+	dir->special.file.path = r_cast(REBCHR *, ser->data);
 
 	Secure_Port(SYM_FILE, dir, path, ser);
 

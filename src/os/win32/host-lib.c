@@ -248,7 +248,7 @@ static void *Task_Ready;
 			NULL,
 			errnum,
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-			rCAST(LPTSTR, &lpMsgBuf),
+			r_cast(LPTSTR, &lpMsgBuf),
 			0,
 			NULL);
 
@@ -257,7 +257,7 @@ static void *Task_Ready;
 	if (!ok) COPY_OS_STR(str, TEXT("unknown error"), len);
 	else {
 		assert(sizeof(TCHAR) == sizeof(REBCHR));
-		COPY_OS_STR(str, rCAST(REBCHR *, lpMsgBuf), len);
+		COPY_OS_STR(str, r_cast(REBCHR *, lpMsgBuf), len);
 		LocalFree(lpMsgBuf);
 	}
 	return str;
@@ -469,7 +469,7 @@ static void *Task_Ready;
 	if (TIME_ZONE_ID_DAYLIGHT == GetTimeZoneInformation(&tzone))
 		tzone.Bias += tzone.DaylightBias;
 
-	FileTimeToSystemTime(rCAST(FILETIME *, &file->special.file.time), &stime);
+	FileTimeToSystemTime(r_cast(FILETIME *, &file->special.file.time), &stime);
 	Convert_Date(&stime, dat, -tzone.Bias);
 }
 
@@ -510,9 +510,9 @@ static void *Task_Ready;
 **
 ***********************************************************************/
 {
-	FARPROC fp = GetProcAddress(rCAST(HMODULE, dll), funcname);
+	FARPROC fp = GetProcAddress(r_cast(HMODULE, dll), funcname);
 
-	return rCAST(void (*)(void *), fp);
+	return r_cast(void (*)(void *), fp);
 }
 
 

@@ -118,7 +118,7 @@
 	REBYTE buf[2048];
 	REBYTE *cp;
 	REBCNT l, n;
-	REBCNT *bp = rCAST(REBCNT *, vp);
+	REBCNT *bp = r_cast(REBCNT *, vp);
 	const REBYTE *type;
 
 	cp = buf;
@@ -128,7 +128,7 @@
 		*cp++ = ':';
 		*cp++ = ' ';
 
-		type = Get_Type_Name(rCAST(REBVAL *, bp));
+		type = Get_Type_Name(r_cast(REBVAL *, bp));
 		for (n = 0; n < 11; n++) {
 			if (*type) *cp++ = *type++;
 			else *cp++ = ' ';

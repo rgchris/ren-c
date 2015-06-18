@@ -126,7 +126,7 @@ static REBOOL Nonblocking_Mode(SOCKET sock)
 **
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 #ifdef TO_WIN32
 	WSADATA wsaData;
 	// Initialize Windows Socket API with given VERSION.
@@ -146,7 +146,7 @@ static REBOOL Nonblocking_Mode(SOCKET sock)
 **
 ***********************************************************************/
 {
-	REBDEV *dev = rCAST(REBDEV *, dev_opaque);
+	REBDEV *dev = r_cast(REBDEV *, dev_opaque);
 #ifdef TO_WIN32
 	if (GET_FLAG(dev->flags, RDF_INIT)) WSACleanup();
 #endif
@@ -300,7 +300,7 @@ static REBOOL Nonblocking_Mode(SOCKET sock)
 		if (!GET_FLAG(sock->flags, RRF_DONE)) return DR_PEND; // still waiting
 		CLR_FLAG(sock->flags, RRF_DONE);
 		if (!sock->error) { // Success!
-			host = sCAST(HOSTENT *, sock->special.net.host_info);
+			host = cast(HOSTENT *, sock->special.net.host_info);
 			memcpy(&sock->special.net.remote_ip, *host->h_addr_list, 4); //he->h_length);
 			Signal_Device(sock, EVT_LOOKUP);
 		}
@@ -313,12 +313,12 @@ static REBOOL Nonblocking_Mode(SOCKET sock)
 	}
 
 	// Else, make the lookup request:
-	host = rCAST(HOSTENT *, OS_ALLOC_MEM(sizeof(MAXGETHOSTSTRUCT)));
+	host = r_cast(HOSTENT *, OS_ALLOC_MEM(sizeof(MAXGETHOSTSTRUCT)));
 	handle = WSAAsyncGetHostByName(
 		Event_Handle,
 		WM_DNS,
 		AS_CHARS(sock->common.data),
-		rCAST(char *, host),
+		r_cast(char *, host),
 		MAXGETHOSTSTRUCT
 	);
 	if (handle != 0) {
@@ -585,7 +585,7 @@ lserr:
 
 	// Accept a new socket, if there is one:
 	result = accept(
-		sock->requestee.socket, rCAST(struct sockaddr *, &sa), &len
+		sock->requestee.socket, r_cast(struct sockaddr *, &sa), &len
 	);
 
 	if (result == BAD_SOCKET) {

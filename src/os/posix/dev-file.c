@@ -219,7 +219,7 @@ static int Get_File_Info(REBREQ *file)
 	if (n > 0 && cp[n-1] == '*') cp[n-1] = 0;
 
 	// If no dir handle, open the dir:
-	if (!(h = rCAST(DIR *, dir->requestee.handle))) {
+	if (!(h = r_cast(DIR *, dir->requestee.handle))) {
 		h = opendir(dir->special.file.path);
 		if (!h) {
 			dir->error = errno;

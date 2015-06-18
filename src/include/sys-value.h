@@ -286,7 +286,7 @@ typedef struct Reb_Tuple {
 #define	VAL_EVENT_TIME(v)	((v)->data.event.time)
 #define	VAL_EVENT_REQ(v)	((v)->data.event.eventee.req)
 #define	VAL_EVENT_SER(v) \
-	(*rCAST(REBSER **, &(v)->data.event.eventee.ser))
+	(*r_cast(REBSER **, &(v)->data.event.eventee.ser))
 
 #define IS_EVENT_MODEL(v,f)	(VAL_EVENT_MODEL(v) == (f))
 
@@ -547,12 +547,12 @@ typedef struct Reb_Series_Ref
 
 // Get a char, from either byte or unicode string:
 #define GET_ANY_CHAR(s,n) \
-	sCAST(REBUNI, BYTE_SIZE(s) ? BIN_HEAD(s)[n] : UNI_HEAD(s)[n])
+	cast(REBUNI, BYTE_SIZE(s) ? BIN_HEAD(s)[n] : UNI_HEAD(s)[n])
 
 #define SET_ANY_CHAR(s,n,c) \
 	(BYTE_SIZE(s) \
-		? (BIN_HEAD(s)[n]=(sCAST(REBYTE, (c)))) \
-		: (UNI_HEAD(s)[n]=(sCAST(REBUNI, (c)))) \
+		? (BIN_HEAD(s)[n]=(cast(REBYTE, (c)))) \
+		: (UNI_HEAD(s)[n]=(cast(REBUNI, (c)))) \
 	)
 
 #define VAL_ANY_CHAR(v) GET_ANY_CHAR(VAL_SERIES(v), VAL_INDEX(v))

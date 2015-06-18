@@ -47,7 +47,7 @@
 
 	arg = D_ARG(2);
 
-	req = rCAST(REBREQ *, Use_Port_State(port, RDI_CLIPBOARD, sizeof(REBREQ)));
+	req = r_cast(REBREQ *, Use_Port_State(port, RDI_CLIPBOARD, sizeof(REBREQ)));
 
 	switch (action) {
 
@@ -105,13 +105,13 @@
 			SERIES_TAIL(ser) = len = abs(len);
 			UNI_TERM(ser);
 			Set_String(arg, ser);
-			req->common.data = rCAST(REBYTE *, UNI_HEAD(ser));
+			req->common.data = r_cast(REBYTE *, UNI_HEAD(ser));
 			SET_FLAG(req->flags, RRF_WIDE);
 		}
 		else
 		// If unicode (may be from above conversion), handle it:
 		if (SERIES_WIDE(VAL_SERIES(arg)) == sizeof(REBUNI)) {
-			req->common.data = rCAST(REBYTE *, VAL_UNI_DATA(arg));
+			req->common.data = r_cast(REBYTE *, VAL_UNI_DATA(arg));
 			SET_FLAG(req->flags, RRF_WIDE);
 		}
 

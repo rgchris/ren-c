@@ -1007,13 +1007,13 @@ static int Do_Ordinal(REBVAL *ds, REBINT n)
 ***********************************************************************/
 {
 	REBVAL *val = D_ARG(1);
-	REBGOB *gob = rCAST(REBGOB *, VAL_EVENT_SER(val));
+	REBGOB *gob = r_cast(REBGOB *, VAL_EVENT_SER(val));
 	REBXYF xy;
 
 	if (gob && GET_FLAG(VAL_EVENT_FLAGS(val), EVF_HAS_XY)) {
 		xy.x = (REBD32)VAL_EVENT_X(val);
 		xy.y = (REBD32)VAL_EVENT_Y(val);
-		VAL_EVENT_SER(val) = rCAST(REBSER *, Map_Gob_Inner(gob, &xy));
+		VAL_EVENT_SER(val) = r_cast(REBSER *, Map_Gob_Inner(gob, &xy));
 		SET_EVENT_XY(val, ROUND_TO_INT(xy.x), ROUND_TO_INT(xy.y));
 	}
 	return R_ARG1;

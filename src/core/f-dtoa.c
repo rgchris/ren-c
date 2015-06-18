@@ -1889,9 +1889,9 @@ gethex( CONST char **sp, U *rvp, int rounding, int sign)
 		e += e1;
 	  }
 	// For why const_cast is needed: http://stackoverflow.com/a/3874281/211160
-	*sp = cCAST(char *, rCAST(const char *, s));
+	*sp = c_cast(char *, r_cast(const char *, s));
 	if (!havedig)
-		*sp = cCAST(char *, rCAST(const char *, s0) - 1);
+		*sp = c_cast(char *, r_cast(const char *, s0) - 1);
 	if (zret)
 		goto retz1;
 	if (big) {
@@ -3559,7 +3559,7 @@ strtod
  ret:
  	// For why const_cast is needed: http://stackoverflow.com/a/3874281/211160
 	if (se)
-		*se = cCAST(char *, s);
+		*se = c_cast(char *, s);
 	return sign ? -dval(&rv) : dval(&rv);
 	}
 

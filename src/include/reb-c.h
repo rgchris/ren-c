@@ -55,53 +55,43 @@
 **
 **			http://stackoverflow.com/questions/332030/
 **
-**		These casts were given long names to make them stand out.
+**		C++ casts were given long names to make them stand out.
 **		One reason that this was considered acceptable is that in C++,
 **		the use of casts is discouraged.  They are rarely necessary if a
 **		design isn't having to do anything involving interfacing
 **		with C code.
 **
-**		These macros bring the benefits of granular casting to Rebol,
+**		The macros below bring the benefits of granular casting to Rebol,
 **		but without *requiring* it to be built with a C++ compiler.  The
-**		shorthand of `CAST(type, value)` can be used for a basic cast;
-**		already making it stand out from other parenthesizations.
-**		Then these can be annotated with a prefix letter in lowercase
-**		to give a not-too-visually-disruptive way of marking a cast type.
-**		(It still most noticeably says "CAST" with no underscores or
-**		other visual noise.)
+**		shorthand of `cast(type, value)` can be used for a static_cast;
+**		with r_cast for reinterpret_cast and c_cast for a const_cast.
+**		Although they are preprocessor macros, being in lowercase seemed
+**		appropriate and less disruptive.  (`assert()` is a macro, too...)
 **
-**		It's not immediately necessary to convert all old-style casts
-**		to a cast variant here.  When building with C++, then that is
-**		when an alarm is raised to mark the cast's actual motivation.
+**		If someone is programming with a C compiler and doesn't know
+**		in particular which cast to use, they can just use `cast()`
+**		and someone doing a build as C++ can mark its proper category.
 **
 ***********************************************************************/
 
 #ifdef __cplusplus
-	// There's no static_assert in C++98, but given that it's asserting
-	// false...the build will just fail in a different way if you use it.
-	#define CAST(t, v) \
-		static_assert(FALSE, "Universal CAST should be sCAST, rCAST, cCAST");
-
-	#define sCAST(t, v) \
+	#define cast(t, v) \
 		static_cast<t>(v)
 
-	#define rCAST(t, v) \
+	#define r_cast(t, v) \
 		reinterpret_cast<t>(v)
 
-	#define cCAST(t, v) \
+	#define c_cast(t, v) \
 		const_cast<t>(v)
 #else
-	#define CAST(t, v) \
-		((t)(v)) // universal CAST placeholder
+	#define cast(t, v) \
+		((t)(v)) // "least dangerous" cast placeholder (static_cast)
 
-	#define sCAST(t, v) \
-		((t)(v)) // "s"tatic CAST placeholder
+	#define r_cast(t, v) \
+		((t)(v)) // "r"einterpret_cast placeholder
 
-	#define rCAST(t, v) \
-		((t)(v)) // "r"einterpret CAST placeholder
-
-	#define cCAST(t, v) \
-		((t)(v)) // "c"onst CAST placeholder
+	#define c_cast(t, v) \
+		((t)(v)) // "c"onst_cast placeholder
 #endif
 
 
@@ -162,16 +152,16 @@
 ***********************************************************************/
 
 #define ALLOC(t) \
-	rCAST(t *, Make_Mem(sizeof(t)))
+	r_cast(t *, Make_Mem(sizeof(t)))
 
 #define ALLOC_ZEROFILL(t) \
-	rCAST(t *, memset(ALLOC(t), '\0', sizeof(t)))
+	r_cast(t *, memset(ALLOC(t), '\0', sizeof(t)))
 
 #define ALLOC_ARRAY(t,n) \
-	rCAST(t *, Make_Mem(sizeof(t) * (n)))
+	r_cast(t *, Make_Mem(sizeof(t) * (n)))
 
 #define ALLOC_ARRAY_ZEROFILL(t,n) \
-	rCAST(t *, memset(ALLOC_ARRAY(t, (n)), '\0', sizeof(t) * (n)))
+	r_cast(t *, memset(ALLOC_ARRAY(t, (n)), '\0', sizeof(t) * (n)))
 
 #if defined(__cplusplus) && __cplusplus >= 201103L
 	// In C++11, decltype lets us do a bit more sanity checking that the
@@ -281,8 +271,8 @@
 		typedef long i32;
 		typedef unsigned long u32;
 	#endif
-	#define MAX_I32 sCAST(i32, 0x7fffffff)
-	#define MIN_I32 sCAST(i32, 0x80000000)
+	#define MAX_I32 cast(i32, 0x7fffffff)
+	#define MIN_I32 cast(i32, 0x80000000)
 
 	#ifdef ODD_INT_64
 		// Windows VC6 nonstandard typing for 64 bits
@@ -293,11 +283,11 @@
 		typedef unsigned long long u64;
 	#endif
 	#ifdef HAS_LL_CONSTS
-		#define MAX_I64 sCAST(i64, 0x7fffffffffffffffLL)
-		#define MIN_I64 sCAST(i64, 0x8000000000000000LL)
+		#define MAX_I64 cast(i64, 0x7fffffffffffffffLL)
+		#define MIN_I64 cast(i64, 0x8000000000000000LL)
 	#else
-		#define MAX_I64 sCAST(i64, 0x7fffffffffffffffI64)
-		#define MIN_I64 sCAST(i64, 0x8000000000000000I64)
+		#define MAX_I64 cast(i64, 0x7fffffffffffffffI64)
+		#define MIN_I64 cast(i64, 0x8000000000000000I64)
 	#endif
 
 	// REBIPT => integral counterpart of void*
@@ -311,8 +301,8 @@
 	#endif
 #endif
 
-#define MAX_U32 sCAST(REBU32, sCast(REBI32, -1))
-#define MAX_U64 sCAST(REBU64, sCAST(REBI64, -1))
+#define MAX_U32 cast(REBU32, sCast(REBI32, -1))
+#define MAX_U64 cast(REBU64, cast(REBI64, -1))
 
 #ifndef DEF_UINT
 	// Only define `uint` if the system didn't already (some do)
@@ -467,8 +457,8 @@ typedef float REBD32;
 // a more consistent name.  But DECIMAL! is being renamed to FLOAT! in Red.
 // So perhaps it should be REBF32/REBF64?
 typedef double REBDEC; 
-#define MIN_D64 sCAST(double, -9.2233720368547758e18)
-#define MAX_D64 sCAST(double, 9.2233720368547758e18)
+#define MIN_D64 cast(double, -9.2233720368547758e18)
+#define MAX_D64 cast(double, 9.2233720368547758e18)
 
 
 /***********************************************************************
@@ -524,10 +514,10 @@ typedef unsigned char REBYTE;
 #ifndef __cplusplus
 	// C build uses universal casts...so no error on AS_BYTES(42157) etc.
 
-	#define AS_BYTES(s)		rCAST(REBYTE *, (s))
-	#define AS_CBYTES(s)	rCAST(const REBYTE *, (s))
-	#define AS_CHARS(s)		rCAST(char *,(s))
-	#define AS_CCHARS(s)	rCAST(const char *, (s))
+	#define AS_BYTES(s)		r_cast(REBYTE *, (s))
+	#define AS_CBYTES(s)	r_cast(const REBYTE *, (s))
+	#define AS_CHARS(s)		r_cast(char *,(s))
+	#define AS_CCHARS(s)	r_cast(const char *, (s))
 #else
 	// C++ build uses inline functions instead of a direct reinterpret_cast,
 	// in order to check you are *only* converting between char and REBYTE,
@@ -696,7 +686,7 @@ typedef u16 REBUNI;
 
 // !!! If it's making a STR, might the length add 1 implicitly?
 #define MAKE_OS_STR(n) \
-	rCAST(REBCHR *, malloc((n) * sizeof(REBCHR)))
+	r_cast(REBCHR *, malloc((n) * sizeof(REBCHR)))
 
 
 /***********************************************************************
@@ -741,4 +731,4 @@ typedef u16 REBUNI;
 	#define MAX(a,b) 		(((a) > (b)) ? (a) : (b))
 #endif
 
-#define ROUND_TO_INT(d)	sCAST(REBINT, floor((d) + 0.5))
+#define ROUND_TO_INT(d)	cast(REBINT, floor((d) + 0.5))

@@ -56,8 +56,8 @@
 	REBSER *dst;
 	REBCNT n;
 	REBCNT i;
-	const REBYTE *bp = uni ? NULL : sCAST(const REBYTE *, p);
-	const REBUNI *up = uni ? sCAST(const REBUNI *, p) : NULL;
+	const REBYTE *bp = uni ? NULL : cast(const REBYTE *, p);
+	const REBUNI *up = uni ? cast(const REBUNI *, p) : NULL;
 
 	if (len == 0)
 		len = uni ? Strlen_Uni(up) : strlen(AS_CCHARS(bp));
@@ -136,8 +136,8 @@
 	REBUNI *out;
 	REBCHR *lpath;
 	REBCNT l = 0;
-	const REBYTE *bp = uni ? NULL : sCAST(const REBYTE *, p);
-	const REBUNI *up = uni ? sCAST(const REBUNI *, p) : NULL;
+	const REBYTE *bp = uni ? NULL : cast(const REBYTE *, p);
+	const REBUNI *up = uni ? cast(const REBUNI *, p) : NULL;
 
 	if (len == 0)
 		len = uni ? Strlen_Uni(up) : strlen(AS_CCHARS(bp));
@@ -176,7 +176,7 @@
 		if (full) {
 #ifdef TO_WIN32
 			assert(sizeof(REBCHR) == sizeof(REBUNI));
-			Append_Uni_Uni(dst, rCAST(REBUNI *, lpath), l);
+			Append_Uni_Uni(dst, r_cast(REBUNI *, lpath), l);
 #else
 			// !!! We cannot use the OS path directly as a UCS-2 string, so
 			// assume it's in UTF-8 and decode it into the buffer.  But is
@@ -184,7 +184,7 @@
 
 			assert(sizeof(REBCHR) == sizeof(REBYTE));
 			REBINT clen = Decode_UTF8(
-				UNI_HEAD(dst), rCAST(const REBYTE *, lpath), l, FALSE
+				UNI_HEAD(dst), r_cast(const REBYTE *, lpath), l, FALSE
 			);
 			dst->tail = abs(clen);
 #endif

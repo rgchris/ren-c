@@ -55,13 +55,13 @@
 // #include "rebol-lib.h"
 
 #ifdef __cplusplus
-	#define sCAST(t, v) static_cast<t>(v)
-	#define rCAST(t, v) reinterpret_cast<t>(v)
-	#define cCAST(t, v) const_cast<t>(v)
+	#define cast(t, v) static_cast<t>(v)
+	#define r_cast(t, v) reinterpret_cast<t>(v)
+	#define c_cast(t, v) const_cast<t>(v)
 #else
-	#define sCAST(t, v) ((t)(v))
-	#define rCAST(t, v) ((t)(v))
-	#define cCAST(t, v) ((t)(v))
+	#define cast(t, v) ((t)(v))
+	#define r_cast(t, v) ((t)(v))
+	#define c_cast(t, v) ((t)(v))
 #endif
 
 //#define TEST_MODE  // teset as stand-alone program
@@ -153,12 +153,12 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 #endif
 
 	// Setup variables:
-	Line_History = rCAST(char **, malloc((MAX_HISTORY+2) * sizeof(char*)));
-	Line_History[0] = rCAST(char *, malloc(strlen("") + 1));
+	Line_History = r_cast(char **, malloc((MAX_HISTORY+2) * sizeof(char*)));
+	Line_History[0] = r_cast(char *, malloc(strlen("") + 1));
 	strcpy(Line_History[0], "");
 	Line_Count = 1;
 
-	term = rCAST(STD_TERM *, malloc(sizeof(*term)));
+	term = r_cast(STD_TERM *, malloc(sizeof(*term)));
 	memset(term, '\0', sizeof(*term));
 	term->buffer = MAKE_OS_STR(TERM_BUF_LEN);
 	term->buffer[0] = 0;
@@ -181,7 +181,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 ***********************************************************************/
 {
 	int n;
-	STD_TERM *term = rCAST(STD_TERM *, term_opaque);
+	STD_TERM *term = r_cast(STD_TERM *, term_opaque);
 
 	if (Term_Init) {
 #ifndef NO_TTY_ATTRIBUTES
@@ -606,7 +606,7 @@ static struct termios Term_Attrs;	// Initial settings, restored on exit
 **
 ***********************************************************************/
 {
-	STD_TERM *term = rCAST(STD_TERM *, term_opaque);
+	STD_TERM *term = r_cast(STD_TERM *, term_opaque);
 	char buf[READ_BUF_LEN];
 	char *cp;
 	int len;		// length of IO read

@@ -58,7 +58,7 @@ static BOOL Seek_File_64(REBREQ *file)
 {
 	// Performs seek and updates index value. TRUE on scuccess.
 	// On error, returns FALSE and sets file->error field.
-	HANDLE h = rCAST(HANDLE, file->requestee.handle);
+	HANDLE h = r_cast(HANDLE, file->requestee.handle);
 	DWORD result;
 	LONG highint;
 
@@ -69,9 +69,9 @@ static BOOL Seek_File_64(REBREQ *file)
 	}
 	else {
 		// Line below updates indexh if it is affected:
-		highint = sCAST(DWORD, file->special.file.index >> 32);
+		highint = cast(DWORD, file->special.file.index >> 32);
 		result = SetFilePointer(
-			h, sCAST(DWORD, file->special.file.index), &highint, FILE_BEGIN
+			h, cast(DWORD, file->special.file.index), &highint, FILE_BEGIN
 		);
 	}
 
@@ -134,7 +134,7 @@ static BOOL Seek_File_64(REBREQ *file)
 ***********************************************************************/
 {
 	WIN32_FIND_DATA info;
-	HANDLE h = rCAST(HANDLE, dir->requestee.handle);
+	HANDLE h = r_cast(HANDLE, dir->requestee.handle);
 	REBCHR *cp = 0;
 
 	if (!h) {
@@ -272,7 +272,7 @@ fail:
 ***********************************************************************/
 {
 	if (file->requestee.handle) {
-		CloseHandle(rCAST(HANDLE, file->requestee.handle));
+		CloseHandle(r_cast(HANDLE, file->requestee.handle));
 		file->requestee.handle = 0;
 	}
 	return DR_DONE;
@@ -288,7 +288,7 @@ fail:
 	DWORD bytes_read; // Windows uses DWORD, not "u32"
 
 	if (GET_FLAG(file->modes, RFM_DIR)) {
-		return Read_Directory(file, rCAST(REBREQ *, file->common.data));
+		return Read_Directory(file, r_cast(REBREQ *, file->common.data));
 	}
 
 	if (!file->requestee.handle) {
@@ -395,9 +395,9 @@ fail:
 
 	// Create 64-bit file size out of the two DWORDs
 
-	file->special.file.size = sCAST(i64, size_high);
+	file->special.file.size = cast(i64, size_high);
 	file->special.file.size <<= 32;
-	file->special.file.size += sCAST(i64, size_low);
+	file->special.file.size += cast(i64, size_low);
 
 	return DR_DONE;
 }

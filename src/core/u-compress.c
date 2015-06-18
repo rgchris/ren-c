@@ -88,9 +88,9 @@
 	//DISABLE_GC;	// !!! why??
 	// dest, dest-len, src, src-len, level
 	err = z_compress2(
-		rCAST(z_Bytef *, BIN_HEAD(output)),
-		sCAST(uLongf *, &size),
-		rCAST(z_Bytef *, BIN_HEAD(input) + index),
+		r_cast(z_Bytef *, BIN_HEAD(output)),
+		cast(uLongf *, &size),
+		r_cast(z_Bytef *, BIN_HEAD(input) + index),
 		len,
 		Z_DEFAULT_COMPRESSION
 	);
@@ -137,9 +137,9 @@
 
 	//DISABLE_GC;
 	err = z_uncompress(
-		rCAST(z_Bytef *, BIN_HEAD(output)),
+		r_cast(z_Bytef *, BIN_HEAD(output)),
         &size,
-		rCAST(z_Bytef *, BIN_HEAD(input) + index),
+		r_cast(z_Bytef *, BIN_HEAD(input) + index),
 		len
 	);
 	if (err) {

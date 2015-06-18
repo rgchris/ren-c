@@ -142,7 +142,7 @@ enum {
 #define Int_Abs(x) ((x) < 0) ? -(x) : (x)
 
 #define Int_Trunc \
-	num = (num > 0) ? sCAST(REBI64, n - r) : -sCAST(REBI64, n - r)
+	num = (num > 0) ? cast(REBI64, n - r) : -cast(REBI64, n - r)
 
 #define Int_Floor \
 	{ \
@@ -153,16 +153,16 @@ enum {
 
 #define Int_Ceil \
 	{ \
-		if (num < 0) num = -sCAST(REBI64, n - r); \
-		else if ((m = n + s) < sCAST(REBU64, 1) << 63) num = m; \
+		if (num < 0) num = -cast(REBI64, n - r); \
+		else if ((m = n + s) < cast(REBU64, 1) << 63) num = m; \
 		else Trap0(RE_OVERFLOW); \
 	}
 
 #define Int_Away \
-	if ((m = n + s) >= sCAST(REBU64, 1) << 63) \
-		if (num < 0 && m == sCAST(REBU64, 1) << 63) num = m; \
+	if ((m = n + s) >= cast(REBU64, 1) << 63) \
+		if (num < 0 && m == cast(REBU64, 1) << 63) num = m; \
 		else Trap0(RE_OVERFLOW); \
-	else num = (num > 0) ? sCAST(REBI64, m) : -sCAST(REBI64, m)
+	else num = (num > 0) ? cast(REBI64, m) : -cast(REBI64, m)
 
 
 /***********************************************************************

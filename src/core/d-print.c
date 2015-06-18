@@ -73,7 +73,7 @@ static REBREQ *Req_SIO;
 {
 	// !!! Very bad cast away from const!  Replace with more suitable
 	// idea once system is locked down.
-	Req_SIO->common.data = cCAST(REBYTE *, AS_CBYTES("\n"));
+	Req_SIO->common.data = c_cast(REBYTE *, AS_CBYTES("\n"));
 	Req_SIO->length = 1;
 	Req_SIO->actual = 0;
 
@@ -98,7 +98,7 @@ static REBREQ *Req_SIO;
 	REBYTE *buf = &buffer[0];
 	REBINT n;
 	REBCNT len2;
-	const REBUNI *up = rCAST(const REBUNI *, bp);
+	const REBUNI *up = r_cast(const REBUNI *, bp);
 
 	if (!bp) vCrash(RP_NO_PRINT_PTR);
 
@@ -119,7 +119,7 @@ static REBREQ *Req_SIO;
 		n = Encode_UTF8(
 			buf,
 			BUF_SIZE-4,
-			uni ? sCAST(const void *, up) : sCAST(const void *, bp),
+			uni ? cast(const void *, up) : cast(const void *, bp),
 			&len2,
 			uni,
 			OS_CRLF
@@ -226,7 +226,7 @@ static REBREQ *Req_SIO;
 /*
 ***********************************************************************/
 {
-	const REBUNI *up = rCAST(const REBUNI *, bp);
+	const REBUNI *up = r_cast(const REBUNI *, bp);
 	REBUNI uc;
 
 	if (Trace_Limit > 0) {
@@ -563,7 +563,7 @@ static REBREQ *Req_SIO;
 		val >>= 4;
 		len--;
 	}
-	for (; len > 0; len--) *bp-- = sCAST(REBYTE, sgn != 0 ? 'F' : '0');
+	for (; len > 0; len--) *bp-- = cast(REBYTE, sgn != 0 ? 'F' : '0');
 	bp++;
 	while (NZ(*buf++ = *bp++));
 	return buf-1;

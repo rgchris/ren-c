@@ -98,7 +98,7 @@
 		return DR_ERROR;
 	}
 
-	cp = rCAST(REBCHR *, GlobalLock(data));
+	cp = r_cast(REBCHR *, GlobalLock(data));
 	if (!cp) {
 		GlobalUnlock(data);
 		CloseClipboard();
@@ -111,8 +111,8 @@
 
 	assert(sizeof(REBCHR) == sizeof(REBUNI));
 	SET_FLAG(req->flags, RRF_WIDE);
-	COPY_OS_STR(rCAST(REBCHR *, bin), cp, len);
-	req->common.data = rCAST(REBYTE *, bin);
+	COPY_OS_STR(r_cast(REBCHR *, bin), cp, len);
+	req->common.data = r_cast(REBYTE *, bin);
 	req->actual = len * sizeof(REBUNI);
 
 	GlobalUnlock(data);
@@ -146,7 +146,7 @@
 	}
 
 	// Lock and copy the string:
-	bin = rCAST(REBYTE *, GlobalLock(data));
+	bin = r_cast(REBYTE *, GlobalLock(data));
 	if (bin == NULL) {
 		req->error = 10;
 		return DR_ERROR;

@@ -139,11 +139,11 @@ static REBI64 ran_arr_cycle()
 	if (secure) {
 		REBYTE srcbuf[20], dstbuf[20];
 
-		memcpy(srcbuf, rCAST(REBYTE *, &tmp), sizeof(tmp));
-		memset(srcbuf + sizeof(tmp), *rCAST(REBYTE *, &tmp), 20 - sizeof(tmp));
+		memcpy(srcbuf, r_cast(REBYTE *, &tmp), sizeof(tmp));
+		memset(srcbuf + sizeof(tmp), *r_cast(REBYTE *, &tmp), 20 - sizeof(tmp));
 
 		SHA1(srcbuf, 20, dstbuf);
-		memcpy(rCAST(REBYTE *, &tmp), dstbuf, sizeof(tmp));
+		memcpy(r_cast(REBYTE *, &tmp), dstbuf, sizeof(tmp));
 	}
 
 	return tmp;
@@ -162,7 +162,7 @@ static REBI64 ran_arr_cycle()
 	m = secure ? MAX_U64 - (MAX_U64 - s + 1) % s : MM - MM % s - 1; /* rejection limit */
 	do u = Random_Int(secure); while (u > m); /* get a random below the limit */
 	u = u % s + 1;
-	return (r > 0) ? sCAST(REBI64, u) : -sCAST(REBI64, u);
+	return (r > 0) ? cast(REBI64, u) : -cast(REBI64, u);
 }
 
 /***********************************************************************

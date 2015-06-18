@@ -668,7 +668,7 @@ mark_obj:
 	Init_Pools(scale);
 
 	Prior_Expand = ALLOC_ARRAY_ZEROFILL(REBSER *, MAX_EXPAND_LIST);
-	Prior_Expand[0] = rCAST(REBSER *, 1);
+	Prior_Expand[0] = r_cast(REBSER *, 1);
 
 	// Temporary series protected from GC. Holds series pointers.
 	GC_Protect = Make_Series(15, sizeof(REBSER *), FALSE);

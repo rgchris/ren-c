@@ -504,7 +504,7 @@ void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 
 	if (IS_INTEGER(pvs->setval)) {
 		i = VAL_INT64(pvs->setval);
-		if (bits > VTUI64) f = sCAST(REBDEC, i);
+		if (bits > VTUI64) f = cast(REBDEC, i);
 		else {
 			// !!! REVIEW: f was not set in this case; compiler caught the
 			// unused parameter.  So fill with distinctive garbage to make it
@@ -514,7 +514,7 @@ void Set_Vector_Row(REBSER *ser, const REBVAL *blk)
 	}
 	else if (IS_DECIMAL(pvs->setval)) {
 		f = VAL_DECIMAL(pvs->setval);
-		if (bits <= VTUI64) i = sCAST(REBINT, f);
+		if (bits <= VTUI64) i = cast(REBINT, f);
 		else {
 			// !!! REVIEW: i was not set in this case; compiler caught the
 			// unused parameter.  So fill with distinctive garbage to make it
