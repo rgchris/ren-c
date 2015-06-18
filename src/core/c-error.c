@@ -253,7 +253,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 	for (dsf = DSF; dsf > 0; dsf = PRIOR_DSF(dsf)) {
 		if (start-- <= 0) {
 			val = Append_Value(blk);
-			Init_Word(val, VAL_WORD_SYM(DSF_WORD(dsf)));
+			Init_Word_Unbound(val, REB_WORD, VAL_WORD_SYM(DSF_WORD(dsf)));
 		}
 	}
 
@@ -283,13 +283,13 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 	if (n < SERIES_TAIL(cats) &&
 		NZ(cat = VAL_SERIES(BLK_SKIP(cats, n)))
 	) {
-		Set_Word(&error->type, FRM_WORD_SYM(cats, n), cats, n);
+		Init_Word(&error->type, REB_WORD, FRM_WORD_SYM(cats, n), cats, n);
 
 		// Find word related to the error itself:
 		
 		n = code % 100 + 3;
 		if (n < SERIES_TAIL(cat))
-			Set_Word(&error->id, FRM_WORD_SYM(cat, n), cat, n);
+			Init_Word(&error->id, REB_WORD, FRM_WORD_SYM(cat, n), cat, n);
 	}
 }
 
@@ -672,7 +672,7 @@ static REBOL_STATE Top_State; // Boot var: holds error state during boot
 		policy = name ? name : 0;
 error:
 		if (!policy) {
-			Init_Word(DS_TOP, sym);
+			Init_Word_Unbound(DS_TOP, REB_WORD, sym);
 			policy = DS_TOP;
 		}
 		Trap1(errcode, policy);
@@ -693,7 +693,7 @@ error:
 {
 	if (flag == SEC_THROW) {
 		if (!value) {
-			Init_Word(DS_TOP, sym);
+			Init_Word_Unbound(DS_TOP, REB_WORD, sym);
 			value = DS_TOP;
 		}
 		vTrap1(RE_SECURITY, value);

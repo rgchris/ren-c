@@ -458,7 +458,7 @@ extern const char Str_Banner[];
 **
 ***********************************************************************/
 {
-	REBSER *frm = Make_Frame(A_MAX_ACTION-1);
+	REBSER *frm = Make_Frame(A_MAX_ACTION - 1, TRUE);
 	REBVAL *obj;
 	REBINT n;
 
@@ -471,6 +471,10 @@ extern const char Str_Banner[];
 
 	obj = Get_System(SYS_STANDARD, STD_UTYPE);
 	SET_OBJECT(obj, frm);
+
+	// !!! Termination was originally missing for the word series
+	SERIES_TAIL(FRM_WORD_SERIES(frm)) = A_MAX_ACTION;
+	BLK_TERM(FRM_WORD_SERIES(frm));
 }
 
 
@@ -521,7 +525,7 @@ extern const char Str_Banner[];
 
 	// Initialize a few fields:
 	Set_Block(ROOT_ROOT, frame);
-	Init_Word(ROOT_NONAME, SYM__UNNAMED_);
+	Init_Word_Unbound(ROOT_NONAME, REB_WORD, SYM__UNNAMED_);
 }
 
 
@@ -632,7 +636,7 @@ extern const char Str_Banner[];
 
 	// Create system/codecs object:
 	value = Get_System(SYS_CODECS, 0);
-	frame = Make_Frame(10);
+	frame = Make_Frame(10, TRUE);
 	SET_OBJECT(value, frame);
 
 	// Set system/words to be the main context:
@@ -664,7 +668,7 @@ extern const char Str_Banner[];
 	// Make the boot context - used to store values created
 	// during boot, but processed in REBOL code (e.g. codecs)
 //	value = Get_System(SYS_CONTEXTS, CTX_BOOT);
-//	frame = Make_Frame(4);
+//	frame = Make_Frame(4, TRUE);
 //	SET_OBJECT(value, frame);
 }
 
@@ -769,7 +773,7 @@ static REBCNT Set_Option_Word(REBCHR *str, REBCNT field)
 		while ((*bp++ = (REBYTE)*str++)); // clips unicode
 		n = Make_Word(buf, n);
 		val = Get_System(SYS_OPTIONS, field);
-		Init_Word(val, n);
+		Init_Word_Unbound(val, REB_WORD, n);
 	}
 	return n;
 }
@@ -956,8 +960,8 @@ static REBCNT Set_Option_Word(REBCHR *str, REBCNT field)
 	Init_Mold(MIN_COMMON);	// Output buffer
 	Init_Frame();			// Frames
 
-	Lib_Context = Make_Frame(600);	// !! Have MAKE-BOOT compute # of words
-	Sys_Context = Make_Frame(50);
+	Lib_Context = Make_Frame(600, TRUE); // !! Have MAKE-BOOT compute # of words
+	Sys_Context = Make_Frame(50, TRUE);
 
 	DOUT("Level 2");
 	Load_Boot();			// Protected strings now available

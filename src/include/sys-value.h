@@ -439,6 +439,24 @@ enum {
 #define LABEL_SERIES(s,l)
 #endif
 
+#ifdef NDEBUG
+	#define ASSERT_SERIES(s) ((void)0)
+#else
+	#define ASSERT_SERIES(s) Assert_Series_Core((s), REB_END)
+#endif
+
+#ifdef NDEBUG
+	#define ASSERT_TYPED_SERIES(s,t) ((void)0)
+#else
+	#define ASSERT_TYPED_SERIES(s,t) Assert_Series_Core((s),(t))
+#endif
+
+#ifdef NDEBUG
+	#define ASSERT_SERIES_TERM(s) ((void)0)
+#else
+	#define ASSERT_SERIES_TERM(s) Assert_Series_Term_Core(s)
+#endif
+
 #ifdef MEM_STRESS
 #define FREE_SERIES(s)    SERIES_SET_FLAG(s, SER_FREE) // mark as removed
 #define	CHECK_MARK(s,d) \
@@ -684,6 +702,12 @@ typedef struct Reb_Series_Ref
 
 #define IS_EMPTY(v)		(VAL_INDEX(v) >= VAL_TAIL(v))
 
+#ifdef NDEBUG
+	#define ASSERT_BLK(s) ((void)0)
+#else
+	#define ASSERT_BLK(s) Assert_Blk_Core(s)
+#endif
+
 
 /***********************************************************************
 **
@@ -754,7 +778,14 @@ typedef struct Reb_Word_Spec {
 #define VAL_WORD_FRAME(v)		((v)->data.word.frame)
 #define HAS_FRAME(v)			VAL_WORD_FRAME(v)
 
-#define	UNBIND(v)				VAL_WORD_FRAME(v)=0, VAL_WORD_INDEX(v)=0
+#ifdef NDEBUG
+	#define UNBIND(v) \
+		(VAL_WORD_FRAME(v)=NULL)
+#else
+	#define WORD_INDEX_UNBOUND MIN_I32
+	#define UNBIND(v) \
+		(VAL_WORD_FRAME(v)=NULL, VAL_WORD_INDEX(v)=WORD_INDEX_UNBOUND)
+#endif
 
 #define VAL_WORD_CANON(v)		VAL_SYM_CANON(BLK_SKIP(PG_Word_Table.series, VAL_WORD_SYM(v)))
 #define	VAL_WORD_NAME(v)		VAL_SYM_NAME(BLK_SKIP(PG_Word_Table.series, VAL_WORD_SYM(v)))
@@ -812,8 +843,8 @@ typedef struct Reb_Frame {
 	VAL_FRM_WORDS(v) = (w); \
 	VAL_SET(v, REB_FRAME)
 
-#define SET_SELFLESS(f) VAL_BIND_SYM(FRM_WORDS(f)) = 0
-#define IS_SELFLESS(f) (!VAL_BIND_SYM(FRM_WORDS(f)))
+#define IS_SELFLESS(f) (VAL_BIND_SYM(FRM_WORDS(f)) == SYM_NOT_USED)
+
 
 /***********************************************************************
 **
@@ -843,6 +874,12 @@ typedef struct Reb_Object {
 #define	VAL_MOD_FRAME(v)	((v)->data.object.frame)
 #define VAL_MOD_BODY(v)		((v)->data.object.body)
 #define VAL_MOD_SPEC(v)		VAL_FRM_SPEC(VAL_OBJ_VALUES(v))
+
+#ifdef NDEBUG
+	#define ASSERT_FRAME(f) ((void)0)
+#else
+	#define ASSERT_FRAME(f) Assert_Frame_Core(f)
+#endif
 
 
 /***********************************************************************

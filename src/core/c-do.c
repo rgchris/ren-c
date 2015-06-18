@@ -73,7 +73,7 @@ void Do_Rebcode(REBVAL *v) {;}
 static REBVAL *Func_Word(REBINT dsf)
 {
 	static REBVAL val;  // Safe: Lifetime is limited to passage to error object.
-	Init_Word(&val, VAL_WORD_SYM(DSF_WORD(dsf)));
+	Init_Word_Unbound(&val, REB_WORD, VAL_WORD_SYM(DSF_WORD(dsf)));
 	return &val;
 }
 

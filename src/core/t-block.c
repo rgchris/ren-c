@@ -862,3 +862,33 @@ zero_blk:
 is_none:
 	return R_NONE;
 }
+
+
+#ifndef NDEBUG
+/***********************************************************************
+**
+*/	void Assert_Blk_Core(const REBSER *series)
+/*
+***********************************************************************/
+{
+    REBCNT len;
+    REBVAL *value;
+
+    if (!IS_BLOCK_SERIES(series))
+        vCrash_Series(series);
+
+    for (len = 0; len < series->tail; len++) {
+        value = BLK_SKIP(series, len);
+
+        if (VAL_TYPE(value) == REB_END) {
+            // Premature end
+            vCrash_Series(series);
+        }
+    }
+
+    if (!IS_END(BLK_SKIP(series, SERIES_TAIL(series)))) {
+        // Not legal to not have an END! at all
+        vCrash_Series(series);
+    }
+}
+#endif

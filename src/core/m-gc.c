@@ -268,6 +268,9 @@ static void Mark_Series(REBSER *series, REBCNT depth);
 			break;
 
 		case REB_FRAME:
+			assert(len == 0);
+			ASSERT_FRAME(series);
+
 			// Mark special word list. Contains no pointers because
 			// these are special word bindings (to typesets if used).
 			if (VAL_FRM_WORDS(val)) MARK_SERIES(VAL_FRM_WORDS(val));
@@ -314,16 +317,26 @@ mark_obj:
 		case REB_ISSUE:
 			// Special word used in word frame, stack, or errors:
 			if (VAL_GET_OPT(val, OPTS_UNWORD)) break;
-			// Mark its context, if it has one:
-			if (VAL_WORD_INDEX(val) > 0 && NZ(ser = VAL_WORD_FRAME(val))) {
-				//if (SERIES_TAIL(ser) > 100) Dump_Word_Value(val);
+
+			ser = VAL_WORD_FRAME(val);
+			if (ser) {
+				// Word is bound, so mark its context (which may be a FRAME!
+				// series or an identifying function word series).  All
+				// bound words should keep their contexts from being GC'd...
+				// even stack-relative contexts for functions.
+
 				CHECK_MARK(ser, depth);
 			}
-			// Possible bug above!!! We cannot mark relative words (negative
-			// index) because the frame pointer does not point to a context,
-			// it may point to a function body, native code, or action number.
-			// But, what if a function is GC'd during it's own evaluation, what
-			// keeps the function's code block from being GC'd?
+			else {
+			#ifndef NDEBUG
+				// Word is not bound to any frame; which means its index
+				// is uninitialized in release builds.  But in debug builds
+				// we require it to be a special value for checking.
+
+				if (VAL_WORD_INDEX(val) != WORD_INDEX_UNBOUND)
+					vCrash_Series(series);
+			#endif
+			}
 			break;
 
 		case REB_NONE:
